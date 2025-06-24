@@ -1,0 +1,7 @@
+yzunlp:
+  database:
+    host: 172.25.220.177
+    port: 13306
+    username: root
+    password: admin
+    schema: hmall
