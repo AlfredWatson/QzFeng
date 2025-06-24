@@ -1,0 +1,12 @@
+server:
+  port: 18080
+spring:
+  application:
+    name: yzunlp-qzfeng-service
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:mysql://${yzunlp.database.host}:${yzunlp.database.port}/${yzunlp.database.schema}?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${yzunlp.database.username}
+    password: ${yzunlp.database.password}
