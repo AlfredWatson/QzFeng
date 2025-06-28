@@ -1,6 +1,7 @@
 package com.yzunlp.qzfeng.Service.Impl;
 
 import com.yzunlp.qzfeng.Service.UserService;
+import com.yzunlp.qzfeng.common.BaseContext;
 import com.yzunlp.qzfeng.domain.dto.LoginDTO;
 import com.yzunlp.qzfeng.domain.dto.RegisterDTO;
 import com.yzunlp.qzfeng.domain.po.UserHealth;
@@ -24,7 +25,11 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Override
     public void saveHealthStatus(UserHealth userHealth) {
+        //插入数据
         userMapper.saveHealthStatus(userHealth);
+        Long healthId = userHealth.getId();
+        Long infoId = BaseContext.getCurrentId();
+        userMapper.save2info2health(healthId,infoId);
     }
 
     @Override

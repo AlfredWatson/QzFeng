@@ -3,10 +3,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yzunlp.qzfeng.mapper.UserMapper">
 
-    <insert id="saveHealthStatus">
+    <insert id="saveHealthStatus" useGeneratedKeys="true" keyProperty="id">
         insert into user_health
         (hypertension, hypertension_year, hypertension_drug, diabetes, diabetes_year,diabetes_drug, hyperlipidemia, hyperlipidemia_year, hyperlipidemia_drug, tumor)
-        values (#{hypertension}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{diabetes},#{diabetesYear}, #{diabetesDrug}, #{hyperlipidemia}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{tumor})
+        value (#{hypertension}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{diabetes},#{diabetesYear}, #{diabetesDrug}, #{hyperlipidemia}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{tumor})
     </insert>
     <insert id="savePropolisUsage" parameterType="com.yzunlp.qzfeng.domain.po.UserPropolis">
 
@@ -15,6 +15,11 @@
         insert into user_info
         (phone, name, password, china_id, birthday, sex, area_code)
         value (#{phone},#{name},#{password},#{chinaId},#{birthday},#{sex},#{areaCode})
+    </insert>
+    <insert id="save2info2health">
+        insert into info2health
+        (info_id, health_id)
+        value (#{infoId},#{healthId})
     </insert>
     <select id="login" resultType="com.yzunlp.qzfeng.domain.po.UserInfo"
             parameterType="com.yzunlp.qzfeng.domain.dto.LoginDTO">

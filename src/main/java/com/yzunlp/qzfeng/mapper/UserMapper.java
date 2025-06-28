@@ -16,4 +16,6 @@ public interface UserMapper {
     UserInfo login(LoginDTO loginDTO);
 
     void register(RegisterDTO registerDTO);
+
+    void save2info2health(Long healthId, Long infoId);
 }
