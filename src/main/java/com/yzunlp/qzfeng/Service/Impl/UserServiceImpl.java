@@ -4,9 +4,7 @@ import com.yzunlp.qzfeng.Service.UserService;
 import com.yzunlp.qzfeng.common.BaseContext;
 import com.yzunlp.qzfeng.domain.dto.LoginDTO;
 import com.yzunlp.qzfeng.domain.dto.RegisterDTO;
-import com.yzunlp.qzfeng.domain.po.UserHealth;
-import com.yzunlp.qzfeng.domain.po.UserInfo;
-import com.yzunlp.qzfeng.domain.po.UserPropolis;
+import com.yzunlp.qzfeng.domain.po.*;
 import com.yzunlp.qzfeng.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +44,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void register(RegisterDTO registerDTO) {
         userMapper.register(registerDTO);
+    }
+
+    @Override
+    public void saveEvaluation(UserEval userEval) {
+        userMapper.saveEvaluation(userEval);
+    }
+
+    @Override
+    public void saveCheckUp(UserCheckupForm userCheckupForm) {
+        userMapper.saveCheckUp(userCheckupForm);
     }
 }

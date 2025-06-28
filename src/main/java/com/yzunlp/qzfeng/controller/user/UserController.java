@@ -1,22 +1,25 @@
 package com.yzunlp.qzfeng.controller.user;
 
 import com.yzunlp.qzfeng.Service.UserService;
+import com.yzunlp.qzfeng.common.BaseContext;
 import com.yzunlp.qzfeng.common.JwtProperties;
 import com.yzunlp.qzfeng.common.JwtUtil;
 import com.yzunlp.qzfeng.common.Result;
 import com.yzunlp.qzfeng.domain.dto.LoginDTO;
 import com.yzunlp.qzfeng.domain.dto.RegisterDTO;
-import com.yzunlp.qzfeng.domain.po.UserHealth;
-import com.yzunlp.qzfeng.domain.po.UserInfo;
-import com.yzunlp.qzfeng.domain.po.UserPropolis;
+import com.yzunlp.qzfeng.domain.po.*;
 import com.yzunlp.qzfeng.domain.vo.LoginVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author: Huang
@@ -67,12 +70,41 @@ public class UserController {
     @PostMapping("/propolisUsage")
     public Result propolisUsage(@RequestBody UserPropolis userPropolis){
         userPropolis.setUpdateTime(LocalDateTime.now());
-        //TODO
-        //缺少userPropolis.setUserId() 完善登录接口后实现
-
+        userPropolis.setUserId(BaseContext.getCurrentId());
         userService.savePropolisUsage(userPropolis);
         return Result.success();
     }
+    @PostMapping("/evaluation")
+    public Result evaluation(@RequestBody UserEval userEval){
+        userEval.setUpdateTime(LocalDateTime.now());
+        userEval.setUserId(BaseContext.getCurrentId());
+        userService.saveEvaluation(userEval);
+        return Result.success();
+    }
+    @PostMapping("/uploads")
+    public Result uploads(@RequestParam("file")MultipartFile file){
+        String originalFilename = file.getOriginalFilename();
+        try {
+            if (originalFilename != null) {
+                // 利用UUID构造新的文件名称
+                String objectName = UUID.randomUUID().toString() + originalFilename;
+                // 文件的请求路径
+                String filePath = "D:\\Code\\QzFeng\\src\\main\\resources\\uploads\\" + objectName;
+                String returnImagePate = "http://127.0.0.1:18080/images/" + objectName;
+                file.transferTo(new File(filePath));
+                UserCheckupForm userCheckupForm = new UserCheckupForm();
+                userCheckupForm.setUserId(BaseContext.getCurrentId());
+                userCheckupForm.setPicUrl(returnImagePate);
+                userService.saveCheckUp(userCheckupForm);
+                return Result.success(returnImagePate);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("上传失败");
+        }
+        return Result.error("上传失败");
+    }
+
 
 
 

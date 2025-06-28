@@ -9,6 +9,9 @@
         value (#{hypertension}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{diabetes},#{diabetesYear}, #{diabetesDrug}, #{hyperlipidemia}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{tumor})
     </insert>
     <insert id="savePropolisUsage" parameterType="com.yzunlp.qzfeng.domain.po.UserPropolis">
+        insert into user_propolis
+        (propolis, propolis_year, propolis_frequency, user_id, update_time)
+        value (#{propolis}, #{propolisYear}, #{propolisFrequency}, #{userId}, #{updateTime})
 
     </insert>
     <insert id="register" parameterType="com.yzunlp.qzfeng.domain.dto.RegisterDTO">
@@ -20,6 +23,16 @@
         insert into info2health
         (info_id, health_id)
         value (#{infoId},#{healthId})
+    </insert>
+    <insert id="saveEvaluation" parameterType="com.yzunlp.qzfeng.domain.po.UserEval">
+        insert into user_eval
+        (evaluation, user_id, update_time)
+        value (#{evaluation},#{userId},#{updateTime})
+    </insert>
+    <insert id="saveCheckUp" parameterType="com.yzunlp.qzfeng.domain.po.UserCheckupForm">
+        insert into user_checkup_form
+        (user_id, pic_url)
+        VALUE (#{userId},#{picUrl})
     </insert>
     <select id="login" resultType="com.yzunlp.qzfeng.domain.po.UserInfo"
             parameterType="com.yzunlp.qzfeng.domain.dto.LoginDTO">
