@@ -1,26 +1,22 @@
-package com.yzunlp.qzfeng.domain.po;
+package com.yzunlp.qzfeng.domain.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 /**
- * @author 10297
- * @since 2025/6/25 23:16
+ * @author: Huang
+ * @description: TODO
+ * @date: 2025/6/28 15:14
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class UserInfo {
-    private Long id; // 用户的唯一标识码
+public class RegisterDTO {
     private String phone; // 用户的电话，唯一
-    private String name = "户晨风"; // 用户的姓名
+    private String name; // 用户的姓名
     private String password = "yzunlp"; // 用户的密码
     private String chinaId; // 用户的身份证号
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthday; // 用户的生日
     private Boolean sex; // 用户的性别，男1，女2
     private Long areaCode; // 用户所在地区编码
