@@ -20,4 +20,17 @@ public class RegisterDTO {
     private Date birthday; // 用户的生日
     private Boolean sex; // 用户的性别，男1，女2
     private Long areaCode; // 用户所在地区编码
+
+    public RegisterDTO() {
+    }
+
+    public RegisterDTO(String phone, String name, String password, String chinaId, Date birthday, Boolean sex, Long areaCode) {
+        this.phone = phone;
+        this.name = name;
+        this.password = password;
+        this.chinaId = chinaId;
+        this.birthday = birthday;
+        this.sex = sex;
+        this.areaCode = areaCode;
+    }
 }

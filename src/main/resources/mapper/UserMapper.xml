@@ -4,38 +4,38 @@
 <mapper namespace="com.yzunlp.qzfeng.mapper.UserMapper">
 
     <insert id="saveHealthStatus" useGeneratedKeys="true" keyProperty="id">
-        insert into user_health
+        insert into Questionnaire.user_health
         (hypertension, hypertension_year, hypertension_drug, diabetes, diabetes_year,diabetes_drug, hyperlipidemia, hyperlipidemia_year, hyperlipidemia_drug, tumor)
         value (#{hypertension}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{diabetes},#{diabetesYear}, #{diabetesDrug}, #{hyperlipidemia}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{tumor})
     </insert>
     <insert id="savePropolisUsage" parameterType="com.yzunlp.qzfeng.domain.po.UserPropolis">
-        insert into user_propolis
+        insert into Questionnaire.user_propolis
         (propolis, propolis_year, propolis_frequency, user_id, update_time)
         value (#{propolis}, #{propolisYear}, #{propolisFrequency}, #{userId}, #{updateTime})
 
     </insert>
     <insert id="register" parameterType="com.yzunlp.qzfeng.domain.dto.RegisterDTO">
-        insert into user_info
+        insert into Questionnaire.user_info
         (phone, name, password, china_id, birthday, sex, area_code)
         value (#{phone},#{name},#{password},#{chinaId},#{birthday},#{sex},#{areaCode})
     </insert>
     <insert id="save2info2health">
-        insert into info2health
+        insert into Questionnaire.info2health
         (info_id, health_id)
         value (#{infoId},#{healthId})
     </insert>
     <insert id="saveEvaluation" parameterType="com.yzunlp.qzfeng.domain.po.UserEval">
-        insert into user_eval
+        insert into Questionnaire.user_eval
         (evaluation, user_id, update_time)
         value (#{evaluation},#{userId},#{updateTime})
     </insert>
     <insert id="saveCheckUp" parameterType="com.yzunlp.qzfeng.domain.po.UserCheckupForm">
-        insert into user_checkup_form
+        insert into Questionnaire.user_checkup_form
         (user_id, pic_url)
         VALUE (#{userId},#{picUrl})
     </insert>
     <select id="login" resultType="com.yzunlp.qzfeng.domain.po.UserInfo"
             parameterType="com.yzunlp.qzfeng.domain.dto.LoginDTO">
-        select * from user_info where phone = #{phone} and password = #{password}
+        select * from Questionnaire.user_info where phone = #{phone} and password = #{password}
     </select>
 </mapper>

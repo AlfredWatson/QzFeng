@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>蜂胶使用情况</title>
+</head>
+<body>
+<!-- 导航栏 -->
+<nav>
+    <a href="/static/home.html">回到主页</a> |
+    <a href="/static/user-info.html">填写基本信息</a> |
+    <a href="/static/user-health.html">填写健康信息</a>
+</nav>
+
+<h2>一、蜂胶使用情况</h2>
+<form id="propolisForm">
+    <p>
+        1.1 您是否服用过蜂胶？<br>
+        <input type="radio" name="propolis" value="0" required> 否<br>
+        <input type="radio" name="propolis" value="1"> 是
+    </p>
+
+    <p>
+        1.2 您开始服用蜂胶的年份：<br>
+        <input type="number" id="propolisYear" placeholder="请输入年份，如2020" min="1900" max="2100">
+    </p>
+
+    <p>
+        1.3 您通常服用蜂胶的频率如何？<br>
+        <input type="radio" name="propolisFrequency" value="A" required> A. 频繁服用，每周大于4次<br>
+        <input type="radio" name="propolisFrequency" value="B"> B. 经常服用，每周1-3次<br>
+        <input type="radio" name="propolisFrequency" value="C"> C. 偶尔服用，每周1次<br>
+        <input type="radio" name="propolisFrequency" value="D"> D. 以前未服用
+    </p>
+
+    <button type="submit">提交</button>
+</form>
+
+<script>
+    const token = localStorage.getItem('token');
+    console.log(token);
+
+    document.getElementById('propolisForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const data = {
+            propolis: parseInt(formData.get('propolis')),
+            // propolisYear: formData.get('propolisYear') ? parseInt(formData.get('propolisYear')) : null,
+            propolisYear: parseInt(formData.get('propolisYear')),
+            propolisFrequency: formData.get('propolisFrequency')
+        };
+
+        fetch('/user/propolisUsage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.json())
+            .then(() => alert("提交成功"))
+            .catch(err => console.error(err));
+    });
+</script>
+</body>
+</html>

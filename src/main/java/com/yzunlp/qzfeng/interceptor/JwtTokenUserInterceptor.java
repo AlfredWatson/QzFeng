@@ -42,15 +42,18 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
 
         //1、从请求头中获取令牌
         String token = request.getHeader(jwtProperties.getUserTokenName());
+        System.out.println("拦截器--user token--" + token);
 
         //2、校验令牌
         try {
             Claims claims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), token);
             Long userId = Long.valueOf(claims.get("userID").toString());
             BaseContext.setCurrentId(userId);   // 通过ThreadLocal获取id，在jwt的claim的时候，把id放进去过了
+            System.out.println("拦截器--user token--user id--" + userId);
             //3、通过，放行
             return true;
         } catch (Exception ex) {
+            System.out.println("拦截器--user token--fail!");
             //4、不通过，响应401状态码
             response.setStatus(401);
             return false;

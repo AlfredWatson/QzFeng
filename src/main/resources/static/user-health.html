@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>填写健康信息</title>
+</head>
+<body>
+<nav>
+    <a href="/static/home.html">回到主页</a> |
+    <a href="/static/user-info.html">填写基本信息</a> |
+    <a href="/static/user-health.html">填写健康信息</a>
+</nav>
+
+<h2>填写用户健康信息</h2>
+<form id="userHealthForm">
+    高血压：<input type="checkbox" id="hypertension"><br>
+    病程几年：<input type="number" id="hypertensionYear"><br>
+    是否规律服药：<input type="checkbox" id="hypertensionDrug"><br><br>
+
+    糖尿病：<input type="checkbox" id="diabetes"><br>
+    病程几年：<input type="number" id="diabetesYear"><br>
+    是否规律服药：<input type="checkbox" id="diabetesDrug"><br><br>
+
+    高血脂：<input type="checkbox" id="hyperlipidemia"><br>
+    病程几年：<input type="number" id="hyperlipidemiaYear"><br>
+    是否规律服药：<input type="checkbox" id="hyperlipidemiaDrug"><br><br>
+
+    肿瘤：<input type="checkbox" id="tumor"><br><br>
+
+    <button type="submit">提交</button>
+</form>
+
+<script>
+    const token = localStorage.getItem('token');
+
+    document.getElementById('userHealthForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const userHealth = {
+            hypertension: document.getElementById('hypertension').checked,
+            hypertensionYear: document.getElementById('hypertensionYear').value ? parseInt(document.getElementById('hypertensionYear').value) : null,
+            hypertensionDrug: document.getElementById('hypertensionDrug').checked,
+
+            diabetes: document.getElementById('diabetes').checked,
+            diabetesYear: document.getElementById('diabetesYear').value ? parseInt(document.getElementById('diabetesYear').value) : null,
+            diabetesDrug: document.getElementById('diabetesDrug').checked,
+
+            hyperlipidemia: document.getElementById('hyperlipidemia').checked,
+            hyperlipidemiaYear: document.getElementById('hyperlipidemiaYear').value ? parseInt(document.getElementById('hyperlipidemiaYear').value) : null,
+            hyperlipidemiaDrug: document.getElementById('hyperlipidemiaDrug').checked,
+
+            tumor: document.getElementById('tumor').checked
+        };
+
+        fetch('/user/health', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify(userHealth)
+        })
+            .then(res => res.json())
+            .then(data => {
+                alert("提交成功！");
+            });
+    });
+</script>
+</body>
+</html>

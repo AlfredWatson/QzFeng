@@ -9,7 +9,8 @@ import com.yzunlp.qzfeng.domain.dto.LoginDTO;
 import com.yzunlp.qzfeng.domain.dto.RegisterDTO;
 import com.yzunlp.qzfeng.domain.po.*;
 import com.yzunlp.qzfeng.domain.vo.LoginVO;
-import lombok.extern.slf4j.Slf4j;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,23 +27,28 @@ import java.util.UUID;
  * @description: TODO
  * @date: 2025/6/28 9:31
  */
-
-@Slf4j
 @RestController
-@RequestMapping("/user/")
+@RequestMapping("/user")
+@Tag(name = "user接口")
 public class UserController {
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+    private final JwtProperties jwtProperties;
 
     @Autowired
-    private JwtProperties jwtProperties;
+    public UserController(UserService userService, JwtProperties jwtProperties) {
+        this.userService = userService;
+        this.jwtProperties = jwtProperties;
+    }
 
+    @Operation(summary = "用户注册")
     @PostMapping("/register")
     public Result register(@RequestBody RegisterDTO registerDTO) {
         userService.register(registerDTO);
         return Result.success();
     }
 
+    @Operation(summary = "用户登录")
     @PostMapping("/login")
     public Result<LoginVO> login(@RequestBody LoginDTO loginDTO) {
         UserInfo userInfo = userService.login(loginDTO);
@@ -53,7 +59,8 @@ public class UserController {
         String token = JwtUtil.createJWT(
                 jwtProperties.getUserSecretKey(),
                 jwtProperties.getUserTtl(),
-                claims);
+                claims
+        );
 
         LoginVO loginVO = LoginVO.builder()
                 .phone(userInfo.getPhone())
@@ -62,34 +69,47 @@ public class UserController {
         return Result.success(loginVO);
     }
 
+    @Operation(summary = "用户填写健康信息")
     @PostMapping("/saveHealthStatus")
-    public Result saveHealthStatus(@RequestBody UserHealth userHealth){
+    public Result saveHealthStatus(@RequestBody UserHealth userHealth) {
+        System.out.println(userHealth);
+
         userService.saveHealthStatus(userHealth);
         return Result.success();
     }
+
+    @Operation(summary = "用户填写蜂王胶使用情况")
     @PostMapping("/propolisUsage")
-    public Result propolisUsage(@RequestBody UserPropolis userPropolis){
+    public Result propolisUsage(@RequestBody UserPropolis userPropolis) {
+        System.out.println(userPropolis);
+
         userPropolis.setUpdateTime(LocalDateTime.now());
         userPropolis.setUserId(BaseContext.getCurrentId());
         userService.savePropolisUsage(userPropolis);
         return Result.success();
     }
+
+    @Operation(summary = "用户填写蜂王胶使用主观体验")
     @PostMapping("/evaluation")
-    public Result evaluation(@RequestBody UserEval userEval){
+    public Result evaluation(@RequestBody UserEval userEval) {
+        System.out.println(userEval);
+
         userEval.setUpdateTime(LocalDateTime.now());
         userEval.setUserId(BaseContext.getCurrentId());
         userService.saveEvaluation(userEval);
         return Result.success();
     }
+
+    @Operation(summary = "用户上传体检报告（图片）")
     @PostMapping("/uploads")
-    public Result uploads(@RequestParam("file")MultipartFile file){
+    public Result uploads(@RequestParam("file") MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
         try {
             if (originalFilename != null) {
                 // 利用UUID构造新的文件名称
                 String objectName = UUID.randomUUID().toString() + originalFilename;
                 // 文件的请求路径
-                String filePath = "D:\\Code\\QzFeng\\src\\main\\resources\\uploads\\" + objectName;
+                String filePath = "D:\\develop_cocos\\JavaProjects\\QzFeng\\src\\main\\resources\\uploads\\" + objectName;
                 String returnImagePate = "http://127.0.0.1:18080/images/" + objectName;
                 file.transferTo(new File(filePath));
                 UserCheckupForm userCheckupForm = new UserCheckupForm();
@@ -104,10 +124,4 @@ public class UserController {
         }
         return Result.error("上传失败");
     }
-
-
-
-
-
-
 }

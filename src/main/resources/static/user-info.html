@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>填写基本信息</title>
+</head>
+<body>
+<nav>
+    <a href="/static/home.html">回到主页</a> |
+    <a href="/static/user-info.html">填写基本信息</a> |
+    <a href="/static/user-health.html">填写健康信息</a>
+</nav>
+
+<h2>填写用户基本信息</h2>
+<form id="userInfoForm">
+    手机号：<input type="text" id="phone" name="phone" readonly><br><br>
+    姓名：<input type="text" id="name" name="name"><br><br>
+    密码：<input type="password" id="password" name="password"><br><br>
+    身份证号：<input type="text" id="chinaId" name="chinaId"><br><br>
+    生日：<input type="date" id="birthday" name="birthday"><br><br>
+    性别：
+    <select id="sex" name="sex">
+        <option value="1">男</option>
+        <option value="2">女</option>
+    </select><br><br>
+    地区编码：<input type="number" id="areaCode" name="areaCode"><br><br>
+    <button type="submit">提交</button>
+</form>
+
+<script>
+    const token = localStorage.getItem('token');
+
+    // 自动填充手机号（可从 token 解析或调用接口）
+    document.getElementById('phone').value = "13812345678";
+
+    document.getElementById('userInfoForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const userInfo = {
+            phone: document.getElementById('phone').value,
+            name: document.getElementById('name').value,
+            password: document.getElementById('password').value,
+            chinaId: document.getElementById('chinaId').value,
+            birthday: document.getElementById('birthday').value,
+            sex: parseInt(document.getElementById('sex').value),
+            areaCode: parseInt(document.getElementById('areaCode').value)
+        };
+
+        fetch('/user/info', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify(userInfo)
+        })
+            .then(res => res.json())
+            .then(data => {
+                alert("提交成功！");
+            });
+    });
+</script>
+</body>
+</html>
