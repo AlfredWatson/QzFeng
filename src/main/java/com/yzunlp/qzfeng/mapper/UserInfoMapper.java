@@ -6,7 +6,7 @@ import com.yzunlp.qzfeng.domain.po.*;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface UserMapper {
+public interface UserInfoMapper {
 
     int addUser(RegisterDTO registerDTO);
 
@@ -17,12 +17,13 @@ public interface UserMapper {
 
     void saveHealthStatus(UserHealth userHealth);
 
+    void saveInfo2health(Long healthId, Long infoId);
+
     void savePropolisUsage(UserPropolis userPropolis);
-
-
-    void save2info2health(Long healthId, Long infoId);
 
     void saveEvaluation(UserEval userEval);
 
     void saveCheckUp(UserCheckupForm userCheckupForm);
+
+    UserInfo selectById(Long id);
 }

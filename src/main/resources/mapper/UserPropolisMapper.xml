@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzunlp.qzfeng.mapper.UserPropolisMapper">
+
+    <insert id="addUserPropolis"
+            parameterType="com.yzunlp.qzfeng.domain.po.UserPropolis">
+        INSERT INTO Questionnaire.user_propolis
+            (propolis, propolis_year, propolis_frequency, user_id, update_time)
+        VALUES
+            (#{propolis}, #{propolisYear}, #{propolisFrequency}, #{userId}, #{updateTime})
+    </insert>
+
+    <update id="updateUserPropolis">
+        UPDATE Questionnaire.user_propolis
+        <set>
+            <if test="propolis != null">
+                propolis = #{propolis},
+            </if>
+            <if test="propolisYear != null">
+                propolis_year = #{propolisYear},
+            </if>
+            <if test="propolisFrequency != null">
+                propolis_frequency = #{propolisFrequency},
+            </if>
+            <if test="propolisFrequency != null or propolisYear != null or propolis != null">
+                update_time = NOW()
+            </if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="selectUserPropolis" resultType="com.yzunlp.qzfeng.domain.po.UserPropolis">
+        SELECT * FROM Questionnaire.user_propolis
+        WHERE user_id = #{userId}
+        ORDER BY update_time DESC
+        LIMIT 1
+    </select>
+
+</mapper>

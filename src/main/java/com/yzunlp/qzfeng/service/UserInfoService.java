@@ -1,10 +1,11 @@
-package com.yzunlp.qzfeng.Service;
+package com.yzunlp.qzfeng.service;
 
 import com.yzunlp.qzfeng.domain.dto.LoginDTO;
 import com.yzunlp.qzfeng.domain.dto.RegisterDTO;
 import com.yzunlp.qzfeng.domain.po.*;
 
-public interface UserService {
+public interface UserInfoService {
+
     int register(RegisterDTO registerDTO);
 
     UserInfo login(LoginDTO loginDTO);
@@ -15,5 +16,5 @@ public interface UserService {
 
     void saveEvaluation(UserEval userEval);
 
-    void saveCheckUp(UserCheckupForm userCheckupForm);
+    void saveCheckUpForm(UserCheckupForm userCheckupForm);
 }

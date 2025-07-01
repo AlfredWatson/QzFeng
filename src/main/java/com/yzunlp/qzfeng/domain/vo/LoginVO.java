@@ -13,4 +13,12 @@ import lombok.Data;
 public class LoginVO {
     private String phone;
     private String token;
+
+    public LoginVO() {
+    }
+
+    public LoginVO(String phone, String token) {
+        this.phone = phone;
+        this.token = token;
+    }
 }

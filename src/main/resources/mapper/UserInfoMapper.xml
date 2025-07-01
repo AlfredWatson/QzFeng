@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yzunlp.qzfeng.mapper.UserMapper">
+<mapper namespace="com.yzunlp.qzfeng.mapper.UserInfoMapper">
 
     <insert id="addUser"
             parameterType="com.yzunlp.qzfeng.domain.dto.RegisterDTO">
@@ -28,6 +28,10 @@
           and password = #{password}
     </select>
 
+    <select id="selectById" resultType="com.yzunlp.qzfeng.domain.po.UserInfo">
+
+    </select>
+
     <insert id="saveHealthStatus" useGeneratedKeys="true" keyProperty="id">
         insert into Questionnaire.user_health
         (hypertension, hypertension_year, hypertension_drug, diabetes, diabetes_year, diabetes_drug, hyperlipidemia,
@@ -35,6 +39,7 @@
             value (#{hypertension}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{diabetes}, #{diabetesYear},
                    #{diabetesDrug}, #{hyperlipidemia}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{tumor})
     </insert>
+
     <insert id="savePropolisUsage" parameterType="com.yzunlp.qzfeng.domain.po.UserPropolis">
         insert into Questionnaire.user_propolis
             (propolis, propolis_year, propolis_frequency, user_id, update_time)
@@ -42,7 +47,7 @@
 
     </insert>
 
-    <insert id="save2info2health">
+    <insert id="saveInfo2health">
         insert into Questionnaire.info2health
             (info_id, health_id)
             value (#{infoId}, #{healthId})

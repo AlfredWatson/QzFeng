@@ -73,10 +73,11 @@ create table user_eval
 
 create table user_checkup_form
 (
-    id      bigint auto_increment comment '唯一表示号'
+    id          bigint auto_increment comment '唯一表示号'
         primary key,
-    user_id bigint       not null comment '外键--user_info-id',
-    pic_url varchar(256) not null comment '体检单(图片)地址',
+    user_id     bigint       not null comment '外键--user_info-id',
+    pic_url     varchar(256) not null comment '体检单(图片)地址',
+    update_time datetime     null comment '上传时间',
     constraint user_checkup_form_user_info_id_fk
         foreign key (user_id) references user_info (id)
 )

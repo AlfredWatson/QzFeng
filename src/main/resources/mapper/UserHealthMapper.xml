@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yzunlp.qzfeng.mapper.UserHealthMapper">
+    <insert id="addUserHealth"
+            parameterType="com.yzunlp.qzfeng.domain.po.UserHealth">
+        insert into Questionnaire.user_health
+        (hypertension, hypertension_year, hypertension_drug, diabetes, diabetes_year, diabetes_drug, hyperlipidemia,
+         hyperlipidemia_year, hyperlipidemia_drug, tumor)
+            value (#{hypertension}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{diabetes}, #{diabetesYear},
+                   #{diabetesDrug}, #{hyperlipidemia}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{tumor})
+    </insert>
+
+    <update id="updateUserHealth">
+        update Questionnaire.user_health
+        <set>
+            <if test="hypertension != null">
+                hypertension = #{hypertension},
+            </if>
+            <if test="hypertensionYear != null">
+                hypertension_year = #{hypertensionYear},
+            </if>
+            <if test="hyperlipidemiaDrug != null">
+                hyperlipidemia_drug = #{hyperlipidemiaDrug},
+            </if>
+            <if test="diabetes != null">
+                diabetes = #{diabetes},
+            </if>
+            <if test="diabetesYear != null">
+                diabetes_year = #{diabetesYear},
+            </if>
+            <if test="diabetesDrug != null">
+                diabetes_drug = #{diabetesDrug},
+            </if>
+            <if test="hyperlipidemia != null">
+                hyperlipidemia = #{hyperlipidemia},
+            </if>
+            <if test="hyperlipidemiaYear != null">
+                hyperlipidemia_year = #{hyperlipidemiaYear},
+            </if>
+            <if test="hyperlipidemiaDrug != null">
+                hyperlipidemia_drug = #{hyperlipidemiaDrug},
+            </if>
+            <if test="tumor != null">
+                tumor = #{tumor}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectUserHealth" resultType="com.yzunlp.qzfeng.domain.po.UserHealth">
+        SELECT *
+        FROM Questionnaire.user_health
+        WHERE id = #{userId}
+    </select>
+</mapper>
