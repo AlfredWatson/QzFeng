@@ -1,5 +1,6 @@
 package com.yzunlp.qzfeng.service.Impl;
 
+import com.yzunlp.qzfeng.domain.dto.UserInfoDTO;
 import com.yzunlp.qzfeng.service.UserInfoService;
 import com.yzunlp.qzfeng.common.BaseContext;
 import com.yzunlp.qzfeng.domain.dto.LoginDTO;
@@ -23,20 +24,6 @@ public class UserInfoServiceImpl implements UserInfoService {
     private UserInfoMapper userInfoMapper;
 
     @Override
-    public void saveHealthStatus(UserHealth userHealth) {
-        //插入数据
-        userInfoMapper.saveHealthStatus(userHealth);
-        Long healthId = userHealth.getId();
-        Long infoId = BaseContext.getCurrentId();
-        userInfoMapper.saveInfo2health(healthId, infoId);
-    }
-
-    @Override
-    public void savePropolisUsage(UserPropolis userPropolis) {
-        userInfoMapper.savePropolisUsage(userPropolis);
-    }
-
-    @Override
     public UserInfo login(LoginDTO loginDTO) {
         // 检查手机号是否已存在
         UserInfo existingUser = userInfoMapper.selectByPhone(loginDTO.getPhone());
@@ -45,6 +32,12 @@ public class UserInfoServiceImpl implements UserInfoService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void updateUserInfo(UserInfoDTO userInfoDTO) {
+        userInfoDTO.setId(BaseContext.getCurrentId());
+        userInfoMapper.updateUserInfo(userInfoDTO);
     }
 
     @Override
@@ -58,16 +51,6 @@ public class UserInfoServiceImpl implements UserInfoService {
             // 注册，插入用户数据
             return userInfoMapper.addUser(registerDTO);
         }
-    }
-
-    @Override
-    public void saveEvaluation(UserEval userEval) {
-        userInfoMapper.saveEvaluation(userEval);
-    }
-
-    @Override
-    public void saveCheckUpForm(UserCheckupForm userCheckupForm) {
-        userInfoMapper.saveCheckUp(userCheckupForm);
     }
 
 

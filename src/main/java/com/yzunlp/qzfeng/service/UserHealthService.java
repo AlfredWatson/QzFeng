@@ -8,9 +8,8 @@ import com.yzunlp.qzfeng.domain.po.UserHealth;
  */
 public interface UserHealthService {
 
-    void addUserHealth(UserHealth userHealth);
-
-    void updateUserHealth(UserHealth userHealth);
+    void saveUserHealth(UserHealth userHealth);
 
     UserHealth selectUserHealth(Long userId);
+
 }

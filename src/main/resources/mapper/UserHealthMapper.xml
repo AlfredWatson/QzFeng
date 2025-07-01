@@ -2,8 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yzunlp.qzfeng.mapper.UserHealthMapper">
+
     <insert id="addUserHealth"
-            parameterType="com.yzunlp.qzfeng.domain.po.UserHealth">
+            parameterType="com.yzunlp.qzfeng.domain.po.UserHealth"
+            useGeneratedKeys="true"
+            keyProperty="id">
         insert into Questionnaire.user_health
         (hypertension, hypertension_year, hypertension_drug, diabetes, diabetes_year, diabetes_drug, hyperlipidemia,
          hyperlipidemia_year, hyperlipidemia_drug, tumor)
@@ -11,7 +14,7 @@
                    #{diabetesDrug}, #{hyperlipidemia}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{tumor})
     </insert>
 
-    <update id="updateUserHealth">
+    <update id="updateUserHealth" parameterType="com.yzunlp.qzfeng.domain.po.UserHealth">
         update Questionnaire.user_health
         <set>
             <if test="hypertension != null">
@@ -48,9 +51,22 @@
         where id = #{id}
     </update>
 
-    <select id="selectUserHealth" resultType="com.yzunlp.qzfeng.domain.po.UserHealth">
+    <select id="selectUserHealthByUserId" resultType="com.yzunlp.qzfeng.domain.po.UserHealth">
+        SELECT uh.*
+        FROM Questionnaire.info2health i2h
+                 LEFT JOIN Questionnaire.user_health uh ON i2h.health_id = uh.id
+        WHERE i2h.info_id = #{userId}
+    </select>
+
+    <insert id="addInfo2Health" parameterType="com.yzunlp.qzfeng.domain.po.Info2Health">
+        insert into Questionnaire.info2health
+            (info_id, health_id)
+            value (#{infoId}, #{healthId})
+    </insert>
+
+    <select id="selectInfo2Health" resultType="com.yzunlp.qzfeng.domain.po.Info2Health">
         SELECT *
-        FROM Questionnaire.user_health
-        WHERE id = #{userId}
+        FROM Questionnaire.info2health
+        WHERE info_id = #{userId}
     </select>
 </mapper>

@@ -5,6 +5,8 @@ import com.yzunlp.qzfeng.common.Result;
 import com.yzunlp.qzfeng.domain.po.UserCheckupForm;
 import com.yzunlp.qzfeng.service.UserCheckupFormService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,8 @@ import java.util.UUID;
  * @author 10297
  * @since 2025/7/1 16:57
  */
+@Tag(name = "user-checkup接口")
+@Slf4j
 @RestController
 @RequestMapping("/user/checkup")
 public class UserCheckupFormController {

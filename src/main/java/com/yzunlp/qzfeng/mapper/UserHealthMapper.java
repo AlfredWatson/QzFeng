@@ -1,5 +1,6 @@
 package com.yzunlp.qzfeng.mapper;
 
+import com.yzunlp.qzfeng.domain.po.Info2Health;
 import com.yzunlp.qzfeng.domain.po.UserHealth;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -29,5 +30,9 @@ public interface UserHealthMapper {
      * @param userId 用户ID
      * @return 用户健康信息
      */
-    UserHealth selectUserHealth(Long userId);
+    UserHealth selectUserHealthByUserId(Long userId);
+
+    void addInfo2Health(Info2Health info2Health);
+
+    Info2Health selectInfo2Health(Long userId);
 }

@@ -1,7 +1,7 @@
 package com.yzunlp.qzfeng.controller.user;
 
+import com.yzunlp.qzfeng.domain.dto.UserInfoDTO;
 import com.yzunlp.qzfeng.service.UserInfoService;
-import com.yzunlp.qzfeng.common.BaseContext;
 import com.yzunlp.qzfeng.common.JwtProperties;
 import com.yzunlp.qzfeng.common.JwtUtil;
 import com.yzunlp.qzfeng.common.Result;
@@ -14,14 +14,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author: Huang
@@ -34,22 +29,22 @@ import java.util.UUID;
 @Tag(name = "user-info接口")
 public class UserInfoController {
 
-    private static final String UPLOAD_DIR = "D:\\develop_cocos\\JavaProjects\\QzFeng\\src\\main\\resources\\uploads\\";
+//    private static final String UPLOAD_DIR = "D:\\develop_cocos\\JavaProjects\\QzFeng\\src\\main\\resources\\uploads\\";
 
-    private final UserInfoService userService;
+    private final UserInfoService userInfoService;
     private final JwtProperties jwtProperties;
 
     @Autowired
     public UserInfoController(UserInfoService userService, JwtProperties jwtProperties) {
-        this.userService = userService;
+        this.userInfoService = userService;
         this.jwtProperties = jwtProperties;
     }
 
-    @Operation(summary = "用户注册")
+    @Operation(summary = "用户注册（增加用户）")
     @PostMapping("/register")
     public Result<Void> register(@RequestBody RegisterDTO registerDTO) {
         log.info("用户注册: {}", registerDTO);
-        int rows = userService.register(registerDTO);
+        int rows = userInfoService.register(registerDTO);
         if (rows == 0) {
             log.info("用户已存在");
             return Result.error("注册失败");
@@ -59,11 +54,19 @@ public class UserInfoController {
         }
     }
 
+    @Operation(summary = "修改用户信息")
+    @PutMapping
+    public Result<Void> updateUserInfo(@RequestBody UserInfoDTO userInfoDTO) {
+        log.info("用户修改信息: {}", userInfoDTO);
+        userInfoService.updateUserInfo(userInfoDTO);
+        return Result.success();
+    }
+
     @Operation(summary = "用户登录")
     @PostMapping("/login")
     public Result<LoginVO> login(@RequestBody LoginDTO loginDTO) {
         log.info("用户登录: {}", loginDTO);
-        UserInfo userInfo = userService.login(loginDTO);
+        UserInfo userInfo = userInfoService.login(loginDTO);
 
         if (userInfo == null) {
             log.info("用户不存在");
@@ -85,56 +88,4 @@ public class UserInfoController {
         return Result.success(loginVO);
     }
 
-    @Operation(summary = "用户填写健康信息")
-    @PostMapping("/saveHealthStatus")
-    public Result<Void> saveHealthStatus(@RequestBody UserHealth userHealth) {
-        log.info("用户填写健康信息: {}", userHealth);
-        userService.saveHealthStatus(userHealth);
-        return Result.success();
-    }
-
-//    @Operation(summary = "用户填写蜂王胶使用情况")
-//    @PostMapping("/savePropolisUsage")
-//    public Result<Void> savePropolisUsage(@RequestBody UserPropolis userPropolis) {
-//        log.info("用户填写蜂王胶使用情况: {}", userPropolis);
-//        userPropolis.setUpdateTime(LocalDateTime.now());
-//        userPropolis.setUserId(BaseContext.getCurrentId());
-//        userService.savePropolisUsage(userPropolis);
-//        return Result.success();
-//    }
-//
-//    @Operation(summary = "用户填写蜂王胶使用主观体验")
-//    @PostMapping("/saveEvaluation")
-//    public Result<Void> saveEvaluation(@RequestBody UserEval userEval) {
-//        log.info("用户填写蜂王胶使用主观体验: {}", userEval);
-//        userEval.setUpdateTime(LocalDateTime.now());
-//        userEval.setUserId(BaseContext.getCurrentId());
-//        userService.saveEvaluation(userEval);
-//        return Result.success();
-//    }
-
-    @Operation(summary = "用户上传体检报告（图片）")
-    @PostMapping("/uploads")
-    public Result<String> uploads(@RequestParam("file") MultipartFile file) {
-        String originalFilename = file.getOriginalFilename();
-        try {
-            if (originalFilename != null) {
-                // 利用UUID构造新的文件名称
-                String objectName = UUID.randomUUID() + originalFilename;
-                // 文件的请求路径
-                String filePath = UPLOAD_DIR + objectName;
-                String returnImagePate = "http://127.0.0.1:18080/images/" + objectName;
-                file.transferTo(new File(filePath));
-                UserCheckupForm userCheckupForm = new UserCheckupForm();
-                userCheckupForm.setUserId(BaseContext.getCurrentId());
-                userCheckupForm.setPicUrl(returnImagePate);
-                userService.saveCheckUpForm(userCheckupForm);
-                return Result.success(returnImagePate);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("上传失败");
-        }
-        return Result.error("上传失败");
-    }
 }

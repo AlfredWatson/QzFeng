@@ -10,10 +10,39 @@
             value (#{phone}, #{name}, #{password}, #{chinaId}, #{birthday}, #{sex}, #{areaCode})
     </insert>
 
+    <update id="updateUserInfo">
+        update Questionnaire.user_info
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="chinaId != null">
+                china_id = #{chinaId},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="areaCode != null">
+                area_code = #{areaCode},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectById" resultType="com.yzunlp.qzfeng.domain.po.UserInfo">
+        SELECT *
+        FROM Questionnaire.user_info
+        WHERE id = #{id}
+    </select>
+
     <!-- 查询手机号是否已存在 -->
-    <select id="selectByPhone"
-            parameterType="string"
-            resultType="com.yzunlp.qzfeng.domain.po.UserInfo">
+    <select id="selectByPhone" parameterType="string" resultType="com.yzunlp.qzfeng.domain.po.UserInfo">
         SELECT *
         FROM Questionnaire.user_info
         WHERE phone = #{phone}
@@ -27,40 +56,4 @@
         where phone = #{phone}
           and password = #{password}
     </select>
-
-    <select id="selectById" resultType="com.yzunlp.qzfeng.domain.po.UserInfo">
-
-    </select>
-
-    <insert id="saveHealthStatus" useGeneratedKeys="true" keyProperty="id">
-        insert into Questionnaire.user_health
-        (hypertension, hypertension_year, hypertension_drug, diabetes, diabetes_year, diabetes_drug, hyperlipidemia,
-         hyperlipidemia_year, hyperlipidemia_drug, tumor)
-            value (#{hypertension}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{diabetes}, #{diabetesYear},
-                   #{diabetesDrug}, #{hyperlipidemia}, #{hypertensionYear}, #{hyperlipidemiaDrug}, #{tumor})
-    </insert>
-
-    <insert id="savePropolisUsage" parameterType="com.yzunlp.qzfeng.domain.po.UserPropolis">
-        insert into Questionnaire.user_propolis
-            (propolis, propolis_year, propolis_frequency, user_id, update_time)
-            value (#{propolis}, #{propolisYear}, #{propolisFrequency}, #{userId}, #{updateTime})
-
-    </insert>
-
-    <insert id="saveInfo2health">
-        insert into Questionnaire.info2health
-            (info_id, health_id)
-            value (#{infoId}, #{healthId})
-    </insert>
-    <insert id="saveEvaluation" parameterType="com.yzunlp.qzfeng.domain.po.UserEval">
-        insert into Questionnaire.user_eval
-            (evaluation, user_id, update_time)
-            value (#{evaluation}, #{userId}, #{updateTime})
-    </insert>
-    <insert id="saveCheckUp" parameterType="com.yzunlp.qzfeng.domain.po.UserCheckupForm">
-        insert into Questionnaire.user_checkup_form
-            (user_id, pic_url)
-            VALUE (#{userId}, #{picUrl})
-    </insert>
-
 </mapper>
