@@ -11,6 +11,7 @@ import com.yzunlp.qzfeng.domain.po.*;
 import com.yzunlp.qzfeng.domain.vo.LoginVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,7 @@ import java.util.UUID;
  * @description: TODO
  * @date: 2025/6/28 9:31
  */
+@Slf4j
 @RestController
 @RequestMapping("/user")
 @Tag(name = "user接口")
@@ -44,13 +46,21 @@ public class UserController {
     @Operation(summary = "用户注册")
     @PostMapping("/register")
     public Result register(@RequestBody RegisterDTO registerDTO) {
-        userService.register(registerDTO);
-        return Result.success();
+        log.info("用户注册: {}", registerDTO);
+        int rows = userService.register(registerDTO);
+        if (rows == 0) {
+            log.info("用户已存在");
+            return Result.error("注册失败");
+        } else {
+            log.info("注册成功: {}", registerDTO);
+            return Result.success();
+        }
     }
 
     @Operation(summary = "用户登录")
     @PostMapping("/login")
     public Result<LoginVO> login(@RequestBody LoginDTO loginDTO) {
+        log.info("用户登录: {}", loginDTO);
         UserInfo userInfo = userService.login(loginDTO);
 
         //登录成功后，生成jwt令牌

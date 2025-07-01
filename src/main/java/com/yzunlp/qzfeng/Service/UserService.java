@@ -5,13 +5,13 @@ import com.yzunlp.qzfeng.domain.dto.RegisterDTO;
 import com.yzunlp.qzfeng.domain.po.*;
 
 public interface UserService {
-    void saveHealthStatus(UserHealth userHealth);
-
-    void savePropolisUsage(UserPropolis userPropolis);
+    int register(RegisterDTO registerDTO);
 
     UserInfo login(LoginDTO loginDTO);
 
-    void register(RegisterDTO registerDTO);
+    void saveHealthStatus(UserHealth userHealth);
+
+    void savePropolisUsage(UserPropolis userPropolis);
 
     void saveEvaluation(UserEval userEval);
 

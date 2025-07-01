@@ -37,13 +37,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfo login(LoginDTO loginDTO) {
-        UserInfo userInfo = userMapper.login(loginDTO);
-        return userInfo;
+//        UserInfo userInfo = userMapper.login(loginDTO);
+        // 检查手机号是否已存在
+        UserInfo existingUser = userMapper.selectByPhone(loginDTO.getPhone());
+        if (existingUser != null){
+            return userMapper.selectByPhoneAndPassword(loginDTO);
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public void register(RegisterDTO registerDTO) {
-        userMapper.register(registerDTO);
+    public int register(RegisterDTO registerDTO) {
+        // 检查手机号是否已存在
+        UserInfo existingUser = userMapper.selectByPhone(registerDTO.getPhone());
+        if (existingUser != null) {
+            // 用户已存在，注册失败
+            return 0;
+        } else {
+            // 注册，插入用户数据
+            return userMapper.addUser(registerDTO);
+        }
     }
 
     @Override

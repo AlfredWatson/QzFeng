@@ -7,13 +7,18 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface UserMapper {
+
+    int addUser(RegisterDTO registerDTO);
+
+    // 根据手机号查询用户信息
+    UserInfo selectByPhone(String phone);
+
+    UserInfo selectByPhoneAndPassword(LoginDTO loginDTO);
+
     void saveHealthStatus(UserHealth userHealth);
 
     void savePropolisUsage(UserPropolis userPropolis);
 
-    UserInfo login(LoginDTO loginDTO);
-
-    void register(RegisterDTO registerDTO);
 
     void save2info2health(Long healthId, Long infoId);
 

@@ -1,9 +1,7 @@
 package com.yzunlp.qzfeng.domain.po;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -12,8 +10,6 @@ import java.util.Date;
  * @since 2025/6/25 23:16
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class UserInfo {
     private Long id; // 用户的唯一标识码
@@ -24,4 +20,18 @@ public class UserInfo {
     private Date birthday; // 用户的生日
     private Boolean sex; // 用户的性别，男1，女2
     private Long areaCode; // 用户所在地区编码
+
+    public UserInfo() {
+    }
+
+    public UserInfo(Long id, String phone, String name, String password, String chinaId, Date birthday, Boolean sex, Long areaCode) {
+        this.id = id;
+        this.phone = phone;
+        this.name = name;
+        this.password = password;
+        this.chinaId = chinaId;
+        this.birthday = birthday;
+        this.sex = sex;
+        this.areaCode = areaCode;
+    }
 }
