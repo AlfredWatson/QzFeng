@@ -25,10 +25,10 @@ public class UserEvalController {
     /**
      * 添加主观评价
      */
-    @Operation(summary = "用户填写蜂王胶使用主观体验")
+    @Operation(summary = "用户填写蜂胶使用主观体验")
     @PostMapping
     public Result<Void> addUserEval(@RequestBody UserEval userEval) {
-        log.info("用户填写蜂王胶使用主观体验: {}", userEval);
+        log.info("用户填写蜂胶使用主观体验: {}", userEval);
         userEvalService.add(userEval);
         return Result.success(null);
     }
@@ -38,7 +38,7 @@ public class UserEvalController {
      */
     @PutMapping
     public Result<Void> updateUserEval(@RequestBody UserEval userEval) {
-        log.info("用户修改蜂王胶使用主观体验: {}", userEval);
+        log.info("用户修改蜂胶使用主观体验: {}", userEval);
         userEvalService.update(userEval);
         return Result.success(null);
     }
@@ -48,7 +48,7 @@ public class UserEvalController {
      */
     @GetMapping("/{userId}")
     public Result<UserEval> getUserEval(@PathVariable Long userId) {
-        log.info("查询 用户id={} 的主观评价", userId);
+        log.info("查询用户的蜂胶使用主观体验");
         UserEval eval = userEvalService.getByUserId(userId);
         return Result.success(eval);
     }

@@ -42,6 +42,10 @@ public class UserPropolisServiceImpl implements UserPropolisService {
 
     @Override
     public UserPropolis getByUserId(Long userId) {
+        if (userId == null || userId <= 0) {
+            userId = BaseContext.getCurrentId();
+        }
+        log.info("service: 查询 用户id={} 的蜂胶信息", userId);
         return userPropolisMapper.selectUserPropolis(userId);
     }
 }

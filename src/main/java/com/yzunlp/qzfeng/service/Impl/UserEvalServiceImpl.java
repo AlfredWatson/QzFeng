@@ -4,6 +4,7 @@ import com.yzunlp.qzfeng.common.BaseContext;
 import com.yzunlp.qzfeng.domain.po.UserEval;
 import com.yzunlp.qzfeng.mapper.UserEvalMapper;
 import com.yzunlp.qzfeng.service.UserEvalService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
  * @author 10297
  * @since 2025/7/1 16:43
  */
+@Slf4j
 @Service
 public class UserEvalServiceImpl implements UserEvalService {
 
@@ -36,6 +38,10 @@ public class UserEvalServiceImpl implements UserEvalService {
 
     @Override
     public UserEval getByUserId(Long userId) {
+        if (userId == null || userId <= 0) {
+            userId = BaseContext.getCurrentId();
+        }
+        log.info("service: 查询用户对蜂胶的评价信息(user-id={})", userId);
         return userEvalMapper.selectUserEval(userId);
     }
 }

@@ -48,7 +48,7 @@ public class UserPropolisController {
      */
     @GetMapping("/{userId}")
     public Result<UserPropolis> getUserPropolis(@PathVariable Long userId) {
-        log.info("查询 用户id={} 的蜂胶信息", userId);
+        log.info("查询用户的蜂胶使用情况");
         UserPropolis propolis = userPropolisService.getByUserId(userId);
         return Result.success(propolis);
     }
