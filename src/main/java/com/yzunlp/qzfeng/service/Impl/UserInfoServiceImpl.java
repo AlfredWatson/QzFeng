@@ -53,5 +53,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
     }
 
-
+    @Override
+    public UserInfo selectById() {
+        return userInfoMapper.selectById(BaseContext.getCurrentId());
+    }
 }

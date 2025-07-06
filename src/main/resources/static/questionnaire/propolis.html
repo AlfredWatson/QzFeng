@@ -3,55 +3,158 @@
 <head>
     <meta charset="UTF-8" />
     <title>蜂胶使用情况</title>
+
+    <!-- 引入 Element UI 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css ">
+    <style>
+        body {
+            margin: 0;
+            padding-bottom: 60px; /* 避免内容被导航栏遮挡 */
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .submit-btn {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f5f7fa;
+            text-align: center;
+            padding: 10px 0;
+            border-top: 1px solid #e4e7ed;
+            z-index: 9999;
+            box-shadow: 0 -2px 12px 0 rgba(0,0,0,0.1);
+        }
+
+        nav a {
+            color: #1a73e8;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-<!-- 导航栏 -->
-<nav>
-    <a href="/static/home.html">回到主页</a> |
-    <a href="/static/user-info.html">填写基本信息</a> |
-    <a href="/static/user-health.html">填写健康信息</a>
-</nav>
 
-<h2>一、蜂胶使用情况</h2>
-<form id="propolisForm">
-    <p>
-        1.1 您是否服用过蜂胶？<br>
-        <input type="radio" name="propolis" value="0" required> 否<br>
-        <input type="radio" name="propolis" value="1"> 是
-    </p>
+<!-- 表单内容 -->
+<div class="form-container">
+    <h2>一、蜂胶使用情况</h2>
 
-    <p>
-        1.2 您开始服用蜂胶的年份：<br>
-        <input type="number" id="propolisYear" placeholder="请输入年份，如2020" min="1900" max="2100">
-    </p>
+    <form id="propolisForm">
+        <p>
+            <strong>1.1 您是否服用过蜂胶？</strong><br>
+            <label class="el-radio"><input type="radio" name="propolis" value="0" required onchange="toggleFields()"> 否</label><br>
+            <label class="el-radio"><input type="radio" name="propolis" value="1" onchange="toggleFields()"> 是</label>
+        </p>
 
-    <p>
-        1.3 您通常服用蜂胶的频率如何？<br>
-        <input type="radio" name="propolisFrequency" value="A" required> A. 频繁服用，每周大于4次<br>
-        <input type="radio" name="propolisFrequency" value="B"> B. 经常服用，每周1-3次<br>
-        <input type="radio" name="propolisFrequency" value="C"> C. 偶尔服用，每周1次<br>
-        <input type="radio" name="propolisFrequency" value="D"> D. 以前未服用
-    </p>
+        <div id="extraFields" class="hidden">
+            <p>
+                <strong>1.2 您开始服用蜂胶的年份：</strong><br>
+                <label for="propolisYear">
+                    <input type="text" id="propolisYear" name="propolisYear" class="el-input__inner" placeholder="请输入年份，如2020">
+                </label>
 
-    <button type="submit">提交</button>
-</form>
+            </p>
 
+            <p>
+                <strong>1.3 您通常服用蜂胶的频率如何？</strong><br>
+                <label class="el-radio"><input type="radio" name="propolisFrequency" value="A"> A. 频繁服用，每周大于4次</label><br>
+                <label class="el-radio"><input type="radio" name="propolisFrequency" value="B"> B. 经常服用，每周1-3次</label><br>
+                <label class="el-radio"><input type="radio" name="propolisFrequency" value="C"> C. 偶尔服用，每周1次</label><br>
+                <label class="el-radio"><input type="radio" name="propolisFrequency" value="D"> D. 以前未服用</label>
+            </p>
+        </div>
+
+        <button type="submit" class="el-button el-button--primary submit-btn">提交</button>
+    </form>
+</div>
+
+
+<!-- 动态插入导航栏 -->
+<div id="nav-placeholder"></div>
+
+<!-- 加载公共导航栏 -->
 <script>
-    const token = localStorage.getItem('token');
+    fetch('/static/common/nav.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('nav-placeholder').innerHTML = data;
+        })
+        .catch(err => console.error('加载导航栏失败:', err));
+</script>
+
+<!-- 引入 Vue 和 Element UI JS -->
+<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js "></script>
+<script>
+    const token = localStorage.getItem('Authorization');
     console.log(token);
+
+    function toggleFields() {
+        const selected = document.querySelector('input[name="propolis"]:checked')?.value;
+        const extraFields = document.getElementById("extraFields");
+
+        if (selected === "1") {
+            extraFields.classList.remove("hidden");
+        } else {
+            extraFields.classList.add("hidden");
+        }
+    }
 
     document.getElementById('propolisForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
         const formData = new FormData(this);
-        const data = {
-            propolis: parseInt(formData.get('propolis')),
-            // propolisYear: formData.get('propolisYear') ? parseInt(formData.get('propolisYear')) : null,
-            propolisYear: parseInt(formData.get('propolisYear')),
-            propolisFrequency: formData.get('propolisFrequency')
+        const propolis = parseInt(formData.get('propolis'));
+
+        let data = {
+            propolis
         };
 
-        fetch('/user/propolisUsage', {
+        if (propolis === 1) {
+            console.log(formData.get('propolisYear'))
+            console.log(formData.get('propolisFrequency'))
+
+            const propolisYear = formData.get('propolisYear');
+            const propolisFrequency = formData.get('propolisFrequency');
+
+            if (!propolisYear || !propolisFrequency) {
+                alert("请填写完整信息后再提交");
+                return;
+            }
+
+            data.propolisYear = propolisYear;
+            data.propolisFrequency = propolisFrequency;
+        }
+
+        fetch('/user/propolis', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,10 +162,20 @@
             },
             body: JSON.stringify(data)
         })
-            .then(res => res.json())
-            .then(() => alert("提交成功"))
-            .catch(err => console.error(err));
+            .then(response => {
+                if (!response.ok) throw new Error('网络错误');
+                return response.json();
+            })
+            .then(() => {
+                alert("提交成功");
+                window.location.href = '/static/home.html';
+            })
+            .catch(err => {
+                console.error(err);
+                alert("提交失败，请重试。");
+            });
     });
 </script>
+
 </body>
 </html>

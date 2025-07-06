@@ -18,13 +18,13 @@ public class UserInfo {
     private String password = "yzunlp"; // 用户的密码
     private String chinaId; // 用户的身份证号
     private Date birthday; // 用户的生日
-    private Boolean sex; // 用户的性别，男1，女2
+    private Short sex; // 用户的性别，男1，女2
     private Long areaCode; // 用户所在地区编码
 
     public UserInfo() {
     }
 
-    public UserInfo(Long id, String phone, String name, String password, String chinaId, Date birthday, Boolean sex, Long areaCode) {
+    public UserInfo(Long id, String phone, String name, String password, String chinaId, Date birthday, Short sex, Long areaCode) {
         this.id = id;
         this.phone = phone;
         this.name = name;

@@ -3,44 +3,150 @@
 <head>
     <meta charset="UTF-8" />
     <title>体检单上传</title>
+
+    <!-- 引入 Element UI 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css ">
+
+    <style>
+        body {
+            margin: 0;
+            padding-bottom: 60px; /* 避免内容被导航栏遮挡 */
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .upload-desc {
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .submit-btn {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f5f7fa;
+            text-align: center;
+            padding: 10px 0;
+            border-top: 1px solid #e4e7ed;
+            z-index: 9999;
+            box-shadow: 0 -2px 12px 0 rgba(0,0,0,0.1);
+        }
+
+        nav a {
+            color: #1a73e8;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-<!-- 导航栏 -->
-<nav>
-    <a href="/static/home.html">回到主页</a> |
-    <a href="/static/user-info.html">填写基本信息</a> |
-    <a href="/static/user-health.html">填写健康信息</a>
-</nav>
 
-<h2>三、体检单上传</h2>
-<form id="uploadForm">
-    <p>3.1 提交体检报告（血常规、尿液分析、血糖检查、血脂检查部分）</p>
-    <input type="file" id="file" accept="image/*" capture="camera" required><br><br>
-    <button type="submit">上传图片</button>
-</form>
+<div class="form-container">
+    <h2>三、体检单上传</h2>
 
+    <div class="upload-desc">
+        请提交体检报告中的以下部分：<br>
+        血常规、尿液分析、血糖检查、血脂检查
+    </div>
+
+    <form id="uploadForm">
+        <div class="el-upload__input">
+            <input type="file" id="file" accept="image/*" capture="camera" required>
+        </div>
+
+        <button type="submit" class="el-button el-button--primary submit-btn">上传图片</button>
+    </form>
+</div>
+
+<!-- 动态插入导航栏 -->
+<div id="nav-placeholder"></div>
+
+<!-- 加载公共导航栏 -->
 <script>
-    const token = localStorage.getItem('token');
+    fetch('/static/common/nav.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('nav-placeholder').innerHTML = data;
+        })
+        .catch(err => console.error('加载导航栏失败:', err));
+</script>
+
+<!-- 引入 Vue 和 Element UI JS -->
+<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js "></script>
+<script>
+    const token = localStorage.getItem('Authorization');
 
     document.getElementById('uploadForm').addEventListener('submit', function (e) {
         e.preventDefault();
         const fileInput = document.getElementById('file');
         const file = fileInput.files[0];
 
+        if (!file) {
+            alert("请选择一张图片后再上传");
+            return;
+        }
+
+        // 可选：增加文件类型或大小限制
+        const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        if (!validTypes.includes(file.type)) {
+            alert("仅支持 JPG、JPEG 或 PNG 格式的图片");
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            alert("图片大小不能超过 5MB");
+            return;
+        }
+
         const formData = new FormData();
         formData.append('file', file);
 
-        fetch('/user/uploads', {
+        fetch('/user/checkup/uploads', {
             method: 'POST',
             headers: {
                 'Authorization': token
             },
             body: formData
         })
-            .then(res => res.json())
-            .then(() => alert("上传成功"))
-            .catch(err => console.error(err));
+            .then(res => {
+                if (!res.ok) throw new Error('上传失败');
+                return res.json();
+            })
+            .then(() => {
+                alert("上传成功！");
+                fileInput.value = ''; // 清空文件选择框
+            })
+            .catch(err => {
+                console.error(err);
+                alert("上传出错，请重试");
+            });
     });
 </script>
+
 </body>
 </html>

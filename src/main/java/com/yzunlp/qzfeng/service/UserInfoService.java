@@ -13,4 +13,5 @@ public interface UserInfoService {
 
     UserInfo login(LoginDTO loginDTO);
 
+    UserInfo selectById();
 }

@@ -86,6 +86,9 @@ public class UserHealthServiceImpl implements UserHealthService {
 
     @Override
     public UserHealth selectUserHealth(Long userId) {
-        return userHealthMapper.selectUserHealthByUserId(BaseContext.getCurrentId());
+        if (userId == null || userId <= 0) {
+            userId = BaseContext.getCurrentId();
+        }
+        return userHealthMapper.selectUserHealthByUserId(userId);
     }
 }

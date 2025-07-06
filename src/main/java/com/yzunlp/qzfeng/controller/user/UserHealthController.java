@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author 10297
@@ -30,10 +27,18 @@ public class UserHealthController {
     }
 
     @Operation(summary = "用户填写(更新)健康信息")
-    @PostMapping
+    @PostMapping("/update")
     public Result<Void> saveUserHealth(@RequestBody UserHealth userHealth) {
         log.info("用户填写健康信息: {}", userHealth);
         userHealthService.saveUserHealth(userHealth);
         return Result.success();
+    }
+
+    @Operation(summary = "根据id查找用户健康信息")
+    @GetMapping
+    public Result<UserHealth> getUserHealth() {
+        log.info("根据id查找用户健康信息");
+        UserHealth userHealth = userHealthService.selectUserHealth(0L);
+        return Result.success(userHealth);
     }
 }

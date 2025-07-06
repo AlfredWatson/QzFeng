@@ -15,7 +15,7 @@ public class UserInfoHealthVO {
     private String name; // 用户的姓名
     private String chinaId; // 用户的身份证号
     private Date birthday; // 用户的生日
-    private Boolean sex; // 用户的性别，男1，女2
+    private Short sex; // 用户的性别，男1，女2
     private Long areaCode; // 用户所在地区编码
 
     private Boolean hypertension; // 是否有高血压
@@ -37,7 +37,7 @@ public class UserInfoHealthVO {
 
     public UserInfoHealthVO(
             Long id, String phone, String name,
-            String chinaId, Date birthday, Boolean sex, Long areaCode,
+            String chinaId, Date birthday, Short sex, Long areaCode,
             Boolean hypertension, Integer hypertensionYear, Boolean hypertensionDrug,
             Boolean diabetes, Integer diabetesYear, Boolean diabetesDrug,
             Boolean hyperlipidemia, Integer hyperlipidemiaYear, Boolean hyperlipidemiaDrug,

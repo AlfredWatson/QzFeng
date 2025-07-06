@@ -3,41 +3,173 @@
 <head>
     <meta charset="UTF-8" />
     <title>填写基本信息</title>
+
+    <!-- 引入 Element UI 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css ">
+
+    <style>
+        body {
+            margin: 0;
+            padding-bottom: 60px; /* 避免内容被导航栏遮挡 */
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .submit-btn {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f5f7fa;
+            text-align: center;
+            padding: 10px 0;
+            border-top: 1px solid #e4e7ed;
+            z-index: 9999;
+            box-shadow: 0 -2px 12px 0 rgba(0,0,0,0.1);
+        }
+
+        nav a {
+            color: #1a73e8;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .el-select {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-<nav>
-    <a href="/static/home.html">回到主页</a> |
-    <a href="/static/user-info.html">填写基本信息</a> |
-    <a href="/static/user-health.html">填写健康信息</a>
-</nav>
 
-<h2>填写用户基本信息</h2>
-<form id="userInfoForm">
-    手机号：<input type="text" id="phone" name="phone" readonly><br><br>
-    姓名：<input type="text" id="name" name="name"><br><br>
-    密码：<input type="password" id="password" name="password"><br><br>
-    身份证号：<input type="text" id="chinaId" name="chinaId"><br><br>
-    生日：<input type="date" id="birthday" name="birthday"><br><br>
-    性别：
-    <select id="sex" name="sex">
-        <option value="1">男</option>
-        <option value="2">女</option>
-    </select><br><br>
-    地区编码：<input type="number" id="areaCode" name="areaCode"><br><br>
-    <button type="submit">提交</button>
-</form>
+<!-- 表单容器 -->
+<div class="form-container">
+    <h2>填写用户基本信息</h2>
 
+    <form id="userInfoForm">
+        <div class="el-form-item">
+            <label for="phone" class="el-form-item__label">手机号：</label>
+            <input type="text" id="phone" class="el-input__inner" readonly />
+        </div>
+
+        <div class="el-form-item">
+            <label for="name" class="el-form-item__label">姓&nbsp;&nbsp;名：</label>
+            <input type="text" id="name" class="el-input__inner" required />
+        </div>
+
+        <div class="el-form-item">
+            <label for="password" class="el-form-item__label">密&nbsp;&nbsp;码：</label>
+            <input type="password" id="password" class="el-input__inner" />
+        </div>
+
+        <div class="el-form-item">
+            <label for="chinaId" class="el-form-item__label">身份证号：</label>
+            <input type="text" id="chinaId" class="el-input__inner" />
+        </div>
+
+        <div class="el-form-item">
+            <label for="birthday" class="el-form-item__label">出生日期：</label>
+            <input type="date" id="birthday" class="el-input__inner" />
+        </div>
+
+        <div class="el-form-item">
+            <label class="el-form-item__label">性&nbsp;&nbsp;别：</label>
+            <select id="sex" class="el-select">
+                <option value="1">男</option>
+                <option value="2">女</option>
+            </select>
+        </div>
+
+        <div class="el-form-item">
+            <label for="areaCode" class="el-form-item__label">地区编码：</label>
+            <input type="text" id="areaCode" class="el-input__inner" />
+        </div>
+
+        <button type="submit" class="el-button el-button--primary submit-btn">提交</button>
+    </form>
+</div>
+
+<!-- 动态插入导航栏 -->
+<div id="nav-placeholder"></div>
+
+<!-- 加载公共导航栏 -->
 <script>
-    const token = localStorage.getItem('token');
+    fetch('/static/common/nav.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('nav-placeholder').innerHTML = data;
+        })
+        .catch(err => console.error('加载导航栏失败:', err));
+</script>
 
-    // 自动填充手机号（可从 token 解析或调用接口）
-    document.getElementById('phone').value = "13812345678";
+<!-- 引入 Vue 和 Element UI JS -->
+<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js "></script>
+<script>
+    const token = localStorage.getItem('Authorization');
 
+    // 页面加载时获取用户信息
+    window.addEventListener('load', () => {
+        fetch('/user/info', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.code === 1) {
+                    const userInfo = data.data;
+                    document.getElementById('phone').value = userInfo.phone;
+                    document.getElementById('name').value = userInfo.name;
+                    document.getElementById('password').value = userInfo.password;
+                    document.getElementById('chinaId').value = userInfo.chinaId;
+                    document.getElementById('birthday').value = userInfo.birthday;
+                    console.log(
+                        userInfo.sex
+                    )
+                    if (userInfo.sex == 1){
+                        console.log(userInfo.sex)
+                        document.getElementById('sex').value = "1";
+                    } else {
+                        document.getElementById('sex').value = "2";
+                    }
+                    // document.getElementById('sex').value = userInfo.sex;
+                    document.getElementById('areaCode').value = userInfo.areaCode;
+                } else {
+                    alert('获取用户信息失败');
+                }
+            });
+    });
+
+    // 表单提交处理
     document.getElementById('userInfoForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
         const userInfo = {
-            phone: document.getElementById('phone').value,
             name: document.getElementById('name').value,
             password: document.getElementById('password').value,
             chinaId: document.getElementById('chinaId').value,
@@ -47,18 +179,30 @@
         };
 
         fetch('/user/info', {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': token
             },
             body: JSON.stringify(userInfo)
         })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('网络错误');
+                return res.json();
+            })
             .then(data => {
-                alert("提交成功！");
+                if (data.code === 1) {
+                    alert("修改成功！");
+                } else {
+                    alert(data.msg || "修改失败");
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("网络错误，请重试");
             });
     });
 </script>
+
 </body>
 </html>

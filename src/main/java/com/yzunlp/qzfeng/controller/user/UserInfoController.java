@@ -46,8 +46,8 @@ public class UserInfoController {
         log.info("用户注册: {}", registerDTO);
         int rows = userInfoService.register(registerDTO);
         if (rows == 0) {
-            log.info("用户已存在");
-            return Result.error("注册失败");
+            log.info("用户已存在: {}", registerDTO);
+            return Result.error("注册失败，手机号已注册");
         } else {
             log.info("注册成功: {}", registerDTO);
             return Result.success();
@@ -60,6 +60,14 @@ public class UserInfoController {
         log.info("用户修改信息: {}", userInfoDTO);
         userInfoService.updateUserInfo(userInfoDTO);
         return Result.success();
+    }
+
+    @Operation(summary = "根据id查找用户信息")
+    @PostMapping
+    public Result<UserInfo> selectById() {
+        log.info("根据id查找用户信息");
+        UserInfo userInfo = userInfoService.selectById();
+        return Result.success(userInfo);
     }
 
     @Operation(summary = "用户登录")

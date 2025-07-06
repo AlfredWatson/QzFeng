@@ -3,56 +3,212 @@
 <head>
     <meta charset="UTF-8" />
     <title>填写健康信息</title>
+
+    <!-- 引入 Element UI 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css ">
+
+    <style>
+        body {
+            margin: 0;
+            padding-bottom: 60px; /* 避免内容被导航栏遮挡 */
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .submit-btn {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f5f7fa;
+            text-align: center;
+            padding: 10px 0;
+            border-top: 1px solid #e4e7ed;
+            z-index: 9999;
+            box-shadow: 0 -2px 12px 0 rgba(0,0,0,0.1);
+        }
+
+        nav a {
+            color: #1a73e8;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .inline-group label {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .inline-group input[type="number"] {
+            width: 100px;
+        }
+    </style>
 </head>
 <body>
-<nav>
-    <a href="/static/home.html">回到主页</a> |
-    <a href="/static/user-info.html">填写基本信息</a> |
-    <a href="/static/user-health.html">填写健康信息</a>
-</nav>
 
-<h2>填写用户健康信息</h2>
-<form id="userHealthForm">
-    高血压：<input type="checkbox" id="hypertension"><br>
-    病程几年：<input type="number" id="hypertensionYear"><br>
-    是否规律服药：<input type="checkbox" id="hypertensionDrug"><br><br>
+<div class="form-container">
+    <h2>填写用户健康信息</h2>
 
-    糖尿病：<input type="checkbox" id="diabetes"><br>
-    病程几年：<input type="number" id="diabetesYear"><br>
-    是否规律服药：<input type="checkbox" id="diabetesDrug"><br><br>
+    <form id="userHealthForm">
+        <div class="el-form-item">
+            <label class="el-checkbox">
+                <input type="checkbox" id="hypertension" onchange="toggleFields('hypertension')"> 是否有高血压
+            </label>
+            <div id="hypertensionGroup" class="inline-group hidden">
+                <label>病程<input type="number" id="hypertensionYear" placeholder="患病年数" /> 年</label>
+                <label><input type="checkbox" id="hypertensionDrug"> 是否规律服药</label>
+            </div>
+        </div>
 
-    高血脂：<input type="checkbox" id="hyperlipidemia"><br>
-    病程几年：<input type="number" id="hyperlipidemiaYear"><br>
-    是否规律服药：<input type="checkbox" id="hyperlipidemiaDrug"><br><br>
+        <div class="el-form-item">
+            <label class="el-checkbox">
+                <input type="checkbox" id="diabetes" onchange="toggleFields('diabetes')"> 是否有糖尿病
+            </label>
+            <div id="diabetesGroup" class="inline-group hidden">
+                <label>病程<input type="number" id="diabetesYear" placeholder="患病年数" /> 年</label>
+                <label><input type="checkbox" id="diabetesDrug"> 是否规律服药</label>
+            </div>
+        </div>
 
-    肿瘤：<input type="checkbox" id="tumor"><br><br>
+        <div class="el-form-item">
+            <label class="el-checkbox">
+                <input type="checkbox" id="hyperlipidemia" onchange="toggleFields('hyperlipidemia')"> 是否有高血脂
+            </label>
+            <div id="hyperlipidemiaGroup" class="inline-group hidden">
+                <label>病程<input type="number" id="hyperlipidemiaYear" placeholder="患病年数" /> 年</label>
+                <label><input type="checkbox" id="hyperlipidemiaDrug"> 是否规律服药</label>
+            </div>
+        </div>
 
-    <button type="submit">提交</button>
-</form>
+        <div class="el-form-item">
+            <label class="el-checkbox">
+                <input type="checkbox" id="tumor"> 是否有肿瘤
+            </label>
+        </div>
+
+        <button type="submit" class="el-button el-button--primary submit-btn">提交</button>
+    </form>
+</div>
+
+<!-- 动态插入导航栏 -->
+<div id="nav-placeholder"></div>
+
+<!-- 加载公共导航栏 -->
+<script>
+    fetch('/static/common/nav.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('nav-placeholder').innerHTML = data;
+        })
+        .catch(err => console.error('加载导航栏失败:', err));
+</script>
+
+<!-- 引入 Vue 和 Element UI JS -->
+<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js "></script>
 
 <script>
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('Authorization');
 
+    function toggleFields(condition) {
+        const groups = {
+            hypertension: 'hypertensionGroup',
+            diabetes: 'diabetesGroup',
+            hyperlipidemia: 'hyperlipidemiaGroup'
+        };
+
+        const checkbox = document.getElementById(condition);
+        const group = document.getElementById(groups[condition]);
+
+        if (checkbox.checked) {
+            group.classList.remove("hidden");
+        } else {
+            group.classList.add("hidden");
+        }
+    }
+
+    // 页面加载时获取用户健康信息
+    window.addEventListener('load', () => {
+        fetch('/user/health', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.code === 1) {
+                    const healthInfo = data.data;
+
+                    document.getElementById('hypertension').checked = healthInfo.hypertension || false;
+                    document.getElementById('hypertensionYear').value = healthInfo.hypertensionYear || '';
+                    document.getElementById('hypertensionDrug').checked = healthInfo.hypertensionDrug || false;
+
+                    document.getElementById('diabetes').checked = healthInfo.diabetes || false;
+                    document.getElementById('diabetesYear').value = healthInfo.diabetesYear || '';
+                    document.getElementById('diabetesDrug').checked = healthInfo.diabetesDrug || false;
+
+                    document.getElementById('hyperlipidemia').checked = healthInfo.hyperlipidemia || false;
+                    document.getElementById('hyperlipidemiaYear').value = healthInfo.hyperlipidemiaYear || '';
+                    document.getElementById('hyperlipidemiaDrug').checked = healthInfo.hyperlipidemiaDrug || false;
+
+                    document.getElementById('tumor').checked = healthInfo.tumor || false;
+
+                    // 初始化隐藏/显示状态
+                    toggleFields('hypertension');
+                    toggleFields('diabetes');
+                    toggleFields('hyperlipidemia');
+                } else {
+                    alert('获取健康信息失败');
+                }
+            });
+    });
+
+    // 表单提交处理
     document.getElementById('userHealthForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
         const userHealth = {
             hypertension: document.getElementById('hypertension').checked,
-            hypertensionYear: document.getElementById('hypertensionYear').value ? parseInt(document.getElementById('hypertensionYear').value) : null,
+            hypertensionYear: document.getElementById('hypertension').checked ? parseInt(document.getElementById('hypertensionYear').value) : null,
             hypertensionDrug: document.getElementById('hypertensionDrug').checked,
 
             diabetes: document.getElementById('diabetes').checked,
-            diabetesYear: document.getElementById('diabetesYear').value ? parseInt(document.getElementById('diabetesYear').value) : null,
+            diabetesYear: document.getElementById('diabetes').checked ? parseInt(document.getElementById('diabetesYear').value) : null,
             diabetesDrug: document.getElementById('diabetesDrug').checked,
 
             hyperlipidemia: document.getElementById('hyperlipidemia').checked,
-            hyperlipidemiaYear: document.getElementById('hyperlipidemiaYear').value ? parseInt(document.getElementById('hyperlipidemiaYear').value) : null,
+            hyperlipidemiaYear: document.getElementById('hyperlipidemia').checked ? parseInt(document.getElementById('hyperlipidemiaYear').value) : null,
             hyperlipidemiaDrug: document.getElementById('hyperlipidemiaDrug').checked,
 
             tumor: document.getElementById('tumor').checked
         };
 
-        fetch('/user/health', {
+        fetch('/user/health/update', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -60,11 +216,23 @@
             },
             body: JSON.stringify(userHealth)
         })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('网络错误');
+                return res.json();
+            })
             .then(data => {
-                alert("提交成功！");
+                if (data.code === 1) {
+                    alert("修改成功！");
+                } else {
+                    alert(data.msg || "修改失败");
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("网络错误，请重试");
             });
     });
 </script>
+
 </body>
 </html>
