@@ -1,103 +1,156 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>用户注册</title>
+
+    <!-- 引入 Element UI 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css ">
+
     <style>
-        label {
-            display: inline-block;
-            width: 100px;
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .register-container {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .register-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .el-button--primary {
+            width: 100%;
+        }
+
+        .login-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #409EFF;
+            text-decoration: none;
+        }
+
+        .result {
+            text-align: center;
+            margin-top: 20px;
+            color: red;
         }
     </style>
 </head>
 <body>
-<!-- 导航栏 -->
-<nav>
-    <a href="/static/login.html">回到登录页</a>
-</nav>
 
-<h2>用户注册</h2>
-<form id="registerForm">
-    <div class="form-group">
-        <label for="phone">手机号：</label>
-        <input type="text" id="phone" name="phone" required />
+<div id="app">
+    <div class="register-container">
+        <h2 class="register-title">用户注册</h2>
+        <el-form :model="registerForm" ref="registerForm" label-position="left" label-width="100px">
+            <el-form-item label="手机号">
+                <el-input v-model="registerForm.phone" placeholder="请输入手机号" required></el-input>
+            </el-form-item>
+            <el-form-item label="姓 名">
+                <el-input v-model="registerForm.name" placeholder="请输入姓名" required></el-input>
+            </el-form-item>
+            <el-form-item label="密 码">
+                <el-input v-model="registerForm.password" type="password" show-password placeholder="请输入密码" required></el-input>
+            </el-form-item>
+            <el-form-item label="身份证号">
+                <el-input v-model="registerForm.chinaId" placeholder="请输入身份证号码" required></el-input>
+            </el-form-item>
+            <el-form-item label="出生日期">
+                <el-date-picker v-model="registerForm.birthday" type="date" placeholder="选择日期" style="width: 100%;"
+                                required></el-date-picker>
+            </el-form-item>
+            <el-form-item label="性 别">
+                <el-select v-model="registerForm.sex" placeholder="请选择性别" style="width: 100%;">
+                    <el-option label="男" value="1"></el-option>
+                    <el-option label="女" value="2"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="地区编码">
+                <el-input-number v-model="registerForm.areaCode" :min="1" :max="999999"
+                                 style="width: 100%;"></el-input-number>
+            </el-form-item>
+            <el-button type="primary" @click="submitForm">注 册</el-button>
+            <a href="/static/login.html" class="login-link">已有账号？去登录</a>
+        </el-form>
+        <div class="result">{{ resultMsg }}</div>
     </div>
-    <div class="form-group">
-        <label for="name">姓&nbsp;&nbsp;名：</label>
-        <input type="text" id="name" name="name" required />
-    </div>
-    <div class="form-group">
-        <label for="password">密&nbsp;&nbsp;码：</label>
-        <input type="password" id="password" name="password" required placeholder="请输入密码" />
-    </div>
-    <div class="form-group">
-        <label for="chinaId">身份证号：</label>
-        <input type="text" id="chinaId" name="chinaId" required />
-    </div>
-    <div class="form-group">
-        <label for="birthday">出生日期：</label>
-        <input type="date" id="birthday" name="birthday" required />
-    </div>
-    <div class="form-group">
-        <label>性&nbsp;&nbsp;别：</label>
-        <select id="sex" name="sex" required>
-            <option value="">请选择</option>
-            <option value="1">男</option>
-            <option value="2">女</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="areaCode">地区编码：</label>
-        <input type="number" id="areaCode" name="areaCode" required />
-    </div>
-    <button type="submit">注册</button>
-</form>
+</div>
 
-<div id="result"></div>
+<!-- 引入 Vue.js -->
+<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+<!-- 引入 Element UI 组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js "></script>
 
 <script>
-    document.getElementById('registerForm').addEventListener('submit', function (e) {
-        e.preventDefault();
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                registerForm: {
+                    phone: '',
+                    name: '',
+                    password: '',
+                    chinaId: '',
+                    birthday: '',
+                    sex: '',
+                    areaCode: null
+                },
+                resultMsg: ''
+            };
+        },
+        methods: {
+            submitForm() {
+                const payload = {
+                    ...this.registerForm,
+                    birthday: this.registerForm.birthday ? new Date(this.registerForm.birthday).toISOString().split('T')[0] : ''
+                };
 
-        const phone = document.getElementById('phone').value.trim();
-        const name = document.getElementById('name').value.trim();
-        const password = document.getElementById('password').value.trim(); // 新增密码字段
-        const chinaId = document.getElementById('chinaId').value.trim();
-        const birthday = document.getElementById('birthday').value;
-        const sex = parseInt(document.getElementById('sex').value);
-        const areaCode = parseInt(document.getElementById('areaCode').value);
-
-        const registerDTO = {
-            phone,
-            name,
-            password, // 提交密码
-            chinaId,
-            birthday,
-            sex,
-            areaCode
-        };
-
-        fetch('/user/info/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(registerDTO)
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.code === 1) {
-                    alert('注册成功，请登录');
-                    window.location.href = '/static/login.html';
-                } else {
-                    alert(data.msg);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                document.getElementById('result').innerText = '注册失败，请重试';
-            });
+                fetch('/user/info/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.code === 1) {
+                            alert('注册成功，请登录');
+                            window.location.href = '/static/login.html';
+                        } else {
+                            this.resultMsg = data.msg;
+                            setTimeout(() => {
+                                this.resultMsg = '';
+                            }, 3000);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        this.resultMsg = '注册失败，请重试';
+                        setTimeout(() => {
+                            this.resultMsg = '';
+                        }, 3000);
+                    });
+            }
+        }
     });
 </script>
+
 </body>
 </html>

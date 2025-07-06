@@ -12,15 +12,15 @@ import java.util.List;
  * @since 2025/7/2 13:22
  */
 @Data
-public class userQuestionnaireVO {
+public class UserQuestionnaireVO {
     private List<UserPropolis> userPropolisList;
     private List<UserEval> userEvalListerEval;
     private List<UserCheckupForm> userCheckupFormList;
 
-    public userQuestionnaireVO() {
+    public UserQuestionnaireVO() {
     }
 
-    public userQuestionnaireVO(
+    public UserQuestionnaireVO(
             List<UserPropolis> userPropolisList,
             List<UserEval> userEvalListerEval,
             List<UserCheckupForm> userCheckupFormList

@@ -1,100 +1,134 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>主页</title>
+
+    <!-- 引入 Element UI 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css ">
+
     <style>
-        body {
+        body, html {
             margin: 0;
-            padding-bottom: 60px; /* 避免内容被导航栏遮挡 */
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: #f5f7fa;
         }
 
-        .form-container {
-            max-width: 600px;
-            margin: 40px auto;
+        .main-container {
+            flex: 1;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
             background: #fff;
-            padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
         }
 
-        h2 {
+        .welcome-title {
             text-align: center;
             margin-bottom: 20px;
+            color: #333;
         }
 
-        .submit-btn {
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             margin-top: 20px;
-            width: 100%;
         }
 
-        nav {
+        .button-link {
+            text-decoration: none;
+        }
+
+        .footer-nav {
             position: fixed;
             bottom: 0;
             left: 0;
-            width: 100%;
-            background-color: #f5f7fa;
-            text-align: center;
+            right: 0;
+            background-color: #ffffff;
+            border-top: 1px solid #e4e4e4;
             padding: 10px 0;
-            border-top: 1px solid #e4e7ed;
-            z-index: 9999;
-            box-shadow: 0 -2px 12px 0 rgba(0, 0, 0, 0.1);
+            z-index: 999;
         }
 
-        nav a {
-            color: #1a73e8;
-            text-decoration: none;
-            margin: 0 10px;
+        .nav-button {
+            font-size: 14px;
+            text-align: center;
+            color: #666;
         }
 
-        nav a:hover {
-            text-decoration: underline;
+        .nav-button i {
+            font-size: 28px; /* 图标大小 */
+            display: block;
+            margin-bottom: 4px;
         }
 
-        .hidden {
-            display: none;
+        /* 模拟 el-row / el-col 布局 */
+        .el-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .el-col-8 {
+            width: 33.33%;
+            text-align: center;
+        }
+
+        .el-button {
+            width: 100%;
         }
     </style>
 </head>
 <body>
 
-<h2>欢迎来到！</h2>
+<div id="app">
+    <div class="main-container">
+        <h2 class="welcome-title">欢迎来到！</h2>
 
-<div class="form-container">
-    <h3>请完成以下调查问卷：</h3>
-    <div style="margin: 20px; text-align: center;">
-        <p>
+        <h3 style="text-align:center;">请完成以下调查问卷：</h3>
+
+        <div class="button-group">
             <a class="button-link" href="/static/questionnaire/propolis.html">
-                <button type="button">填写蜂胶使用情况</button>
+                <button type="button" class="el-button el-button--primary is-round">填写蜂胶使用情况</button>
             </a>
-        </p>
-        <p>
             <a class="button-link" href="/static/questionnaire/evaluation.html">
-                <button type="button">填写主观评估</button>
+                <button type="button" class="el-button el-button--primary is-round">填写主观评估</button>
             </a>
-        </p>
-        <p>
             <a class="button-link" href="/static/questionnaire/upload.html">
-                <button type="button">上传体检报告单</button>
+                <button type="button" class="el-button el-button--primary is-round">上传体检报告单</button>
             </a>
-        </p>
+        </div>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="footer-nav">
+        <div class="el-row">
+            <div class="el-col-8">
+                <div class="nav-button">
+                    <i class="el-icon-s-home"></i>
+                    <a href="/static/home.html">主页</a>
+                </div>
+            </div>
+            <div class="el-col-8">
+                <div class="nav-button">
+                    <i class="el-icon-document-add"></i>
+                    <a href="/static/user-info.html">信息</a>
+                </div>
+            </div>
+            <div class="el-col-8">
+                <div class="nav-button">
+                    <i class="el-icon-medal"></i>
+                    <a href="/static/user-health.html">健康</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
-<!-- 动态插入导航栏 -->
-<div id="nav-placeholder"></div>
-
-<!-- 加载公共导航栏 -->
-<script>
-    fetch('/static/common/nav.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('nav-placeholder').innerHTML = data;
-        })
-        .catch(err => console.error('加载导航栏失败:', err));
-</script>
 
 </body>
 </html>

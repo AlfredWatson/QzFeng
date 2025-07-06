@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta charset="UTF-8" />
     <title>填写基本信息</title>
 
     <!-- 引入 Element UI 样式 -->
@@ -11,7 +10,7 @@
     <style>
         body {
             margin: 0;
-            padding-bottom: 70px; /* 避免内容被导航栏遮挡 */
+            padding-bottom: 60px; /* 避免内容被导航栏遮挡 */
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
         }
@@ -22,126 +21,77 @@
             background: #fff;
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
         }
 
         h2 {
             text-align: center;
             margin-bottom: 20px;
-            color: #333;
-        }
-
-        .el-form-item {
-            margin-bottom: 20px;
-        }
-
-        .el-form-item__label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        .el-input__inner,
-        .el-select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #dcdfe6;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-
-        .el-select {
-            height: 40px;
-            line-height: 40px;
         }
 
         .submit-btn {
             margin-top: 20px;
             width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            background-color: #409EFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
         }
 
-        .submit-btn:hover {
-            background-color: #337ecc;
-        }
-
-        .footer-nav {
+        nav {
             position: fixed;
             bottom: 0;
             left: 0;
-            right: 0;
-            background-color: #ffffff;
-            border-top: 1px solid #e4e4e4;
-            padding: 10px 0;
-            z-index: 999;
-        }
-
-        .nav-button {
-            font-size: 14px;
-            text-align: center;
-            color: #666;
-        }
-
-        .nav-button i {
-            font-size: 28px; /* 图标大小 */
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        /* 模拟 el-row / el-col 布局 */
-        .el-row {
-            display: flex;
-            justify-content: space-between;
             width: 100%;
-        }
-
-        .el-col-8 {
-            width: 33.33%;
+            background-color: #f5f7fa;
             text-align: center;
+            padding: 10px 0;
+            border-top: 1px solid #e4e7ed;
+            z-index: 9999;
+            box-shadow: 0 -2px 12px 0 rgba(0,0,0,0.1);
         }
 
-        .el-button {
+        nav a {
+            color: #1a73e8;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .el-select {
             width: 100%;
         }
     </style>
 </head>
 <body>
 
+<!-- 表单容器 -->
 <div class="form-container">
     <h2>填写用户基本信息</h2>
 
     <form id="userInfoForm">
         <div class="el-form-item">
             <label for="phone" class="el-form-item__label">手机号：</label>
-            <input type="text" id="phone" class="el-input__inner" readonly/>
+            <input type="text" id="phone" class="el-input__inner" readonly />
         </div>
 
         <div class="el-form-item">
             <label for="name" class="el-form-item__label">姓&nbsp;&nbsp;名：</label>
-            <input type="text" id="name" class="el-input__inner" required/>
+            <input type="text" id="name" class="el-input__inner" required />
         </div>
 
         <div class="el-form-item">
             <label for="password" class="el-form-item__label">密&nbsp;&nbsp;码：</label>
-            <input type="password" id="password" class="el-input__inner"/>
+            <input type="password" id="password" class="el-input__inner" />
         </div>
 
         <div class="el-form-item">
             <label for="chinaId" class="el-form-item__label">身份证号：</label>
-            <input type="text" id="chinaId" class="el-input__inner"/>
+            <input type="text" id="chinaId" class="el-input__inner" />
         </div>
 
         <div class="el-form-item">
             <label for="birthday" class="el-form-item__label">出生日期：</label>
-            <input type="date" id="birthday" class="el-input__inner"/>
+            <input type="date" id="birthday" class="el-input__inner" />
         </div>
 
         <div class="el-form-item">
@@ -154,37 +104,29 @@
 
         <div class="el-form-item">
             <label for="areaCode" class="el-form-item__label">地区编码：</label>
-            <input type="text" id="areaCode" class="el-input__inner"/>
+            <input type="text" id="areaCode" class="el-input__inner" />
         </div>
 
-        <button type="submit" class="submit-btn">提交</button>
+        <button type="submit" class="el-button el-button--primary submit-btn">提交</button>
     </form>
 </div>
 
-<!-- 底部导航栏 -->
-<div class="footer-nav">
-    <div class="el-row">
-        <div class="el-col-8">
-            <div class="nav-button">
-                <i class="el-icon-s-home"></i>
-                <a href="/static/home.html">主页</a>
-            </div>
-        </div>
-        <div class="el-col-8">
-            <div class="nav-button">
-                <i class="el-icon-document-add"></i>
-                <a href="/static/user-info.html">信息</a>
-            </div>
-        </div>
-        <div class="el-col-8">
-            <div class="nav-button">
-                <i class="el-icon-medal"></i>
-                <a href="/static/user-health.html">健康</a>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- 动态插入导航栏 -->
+<div id="nav-placeholder"></div>
 
+<!-- 加载公共导航栏 -->
+<script>
+    fetch('/static/common/nav.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('nav-placeholder').innerHTML = data;
+        })
+        .catch(err => console.error('加载导航栏失败:', err));
+</script>
+
+<!-- 引入 Vue 和 Element UI JS -->
+<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js "></script>
 <script>
     const token = localStorage.getItem('Authorization');
 
@@ -206,10 +148,16 @@
                     document.getElementById('password').value = userInfo.password;
                     document.getElementById('chinaId').value = userInfo.chinaId;
                     document.getElementById('birthday').value = userInfo.birthday;
-
-                    // 设置性别下拉框值
-                    document.getElementById('sex').value = userInfo.sex === 1 ? "1" : "2";
-
+                    console.log(
+                        userInfo.sex
+                    )
+                    if (userInfo.sex == 1){
+                        console.log(userInfo.sex)
+                        document.getElementById('sex').value = "1";
+                    } else {
+                        document.getElementById('sex').value = "2";
+                    }
+                    // document.getElementById('sex').value = userInfo.sex;
                     document.getElementById('areaCode').value = userInfo.areaCode;
                 } else {
                     alert('获取用户信息失败');

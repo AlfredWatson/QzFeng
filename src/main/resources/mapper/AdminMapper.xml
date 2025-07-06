@@ -5,15 +5,12 @@
 
     <select id="selectUserInfoHealthById" resultType="com.yzunlp.qzfeng.domain.vo.UserInfoHealthVO"
             parameterType="java.lang.Long">
-        SELECT
-            user_info.*,
-            user_health.*
-        FROM
-            user_info
-                LEFT JOIN info2health ON user_info.id = info2health.info_id
-                LEFT JOIN user_health ON user_health.id = info2health.health_id
-        WHERE
-            user_info.id = #{id};
+        SELECT user_info.*,
+               user_health.*
+        FROM user_info
+                 LEFT JOIN info2health ON user_info.id = info2health.info_id
+                 LEFT JOIN user_health ON user_health.id = info2health.health_id
+        WHERE user_info.id = #{id};
 
     </select>
 

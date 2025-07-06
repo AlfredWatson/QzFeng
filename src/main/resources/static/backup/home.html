@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <title>主页</title>
+    <style>
+        body {
+            margin: 0;
+            padding-bottom: 60px; /* 避免内容被导航栏遮挡 */
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .submit-btn {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f5f7fa;
+            text-align: center;
+            padding: 10px 0;
+            border-top: 1px solid #e4e7ed;
+            z-index: 9999;
+            box-shadow: 0 -2px 12px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: #1a73e8;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<h2>欢迎来到！</h2>
+
+<div class="form-container">
+    <h3>请完成以下调查问卷：</h3>
+    <div style="margin: 20px; text-align: center;">
+        <p>
+            <a class="button-link" href="/static/questionnaire/propolis.html">
+                <button type="button">填写蜂胶使用情况</button>
+            </a>
+        </p>
+        <p>
+            <a class="button-link" href="/static/questionnaire/evaluation.html">
+                <button type="button">填写主观评估</button>
+            </a>
+        </p>
+        <p>
+            <a class="button-link" href="/static/questionnaire/upload.html">
+                <button type="button">上传体检报告单</button>
+            </a>
+        </p>
+    </div>
+</div>
+
+<!-- 动态插入导航栏 -->
+<div id="nav-placeholder"></div>
+
+<!-- 加载公共导航栏 -->
+<script>
+    fetch('/static/common/nav.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('nav-placeholder').innerHTML = data;
+        })
+        .catch(err => console.error('加载导航栏失败:', err));
+</script>
+
+</body>
+</html>

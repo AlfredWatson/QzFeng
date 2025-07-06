@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta charset="UTF-8">
     <title>蜂胶使用主观评估</title>
-
     <!-- 引入 Element UI 样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css ">
-
     <style>
         body {
             margin: 0;
-            padding-bottom: 70px; /* 避免内容被导航栏遮挡 */
+            padding-bottom: 60px; /* 避免内容被导航栏遮挡 */
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
         }
@@ -25,88 +22,41 @@
             box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
         }
 
-        h2, h3 {
+        h2 {
             text-align: center;
-            color: #333;
-        }
-
-        p {
-            text-align: center;
-            color: #888;
             margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        .el-select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #dcdfe6;
-            border-radius: 4px;
-            font-size: 14px;
         }
 
         .submit-btn {
             margin-top: 20px;
             width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            background-color: #409EFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
         }
 
-        .submit-btn:hover {
-            background-color: #337ecc;
-        }
-
-        /* 底部导航栏样式 */
-        .footer-nav {
+        nav {
             position: fixed;
             bottom: 0;
             left: 0;
-            right: 0;
-            background-color: #ffffff;
-            border-top: 1px solid #e4e4e4;
+            width: 100%;
+            background-color: #f5f7fa;
+            text-align: center;
             padding: 10px 0;
-            z-index: 999;
+            border-top: 1px solid #e4e7ed;
+            z-index: 9999;
             box-shadow: 0 -2px 12px 0 rgba(0, 0, 0, 0.1);
         }
 
-        .el-row {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-        }
-
-        .el-col-8 {
-            text-align: center;
-        }
-
-        .nav-button i {
-            font-size: 24px;
-            display: block;
-        }
-
-        .nav-button a {
-            color: #666;
+        nav a {
+            color: #1a73e8;
             text-decoration: none;
-            font-size: 12px;
+            margin: 0 10px;
         }
 
-        .nav-button a:hover {
-            color: #409EFF;
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -117,7 +67,8 @@
     <h3>2.1 您觉得服用蜂胶后全身情况的改善体现在哪些方面？</h3>
     <p>（评分范围：0=无效、1=有效、2=无此项、3=不详）</p>
 
-    <form id="evalForm">
+    <form class="evaluation-form" id="evalForm">
+
         <div class="form-group">
             <label for="cold">1. 感冒较以往次数减少</label>
             <select id="cold" class="el-select">
@@ -184,36 +135,40 @@
             </select>
         </div>
 
-        <button type="button" onclick="submitEvaluation()" class="submit-btn">提交</button>
+        <button type="button" onclick="submitEvaluation()" class="el-button el-button--primary submit-btn">提交</button>
+
     </form>
 </div>
 
-<!-- 底部导航栏 -->
-<div class="footer-nav">
-    <div class="el-row">
-        <div class="el-col-8">
-            <div class="nav-button">
-                <i class="el-icon-s-home"></i>
-                <a href="/static/home.html">主页</a>
-            </div>
-        </div>
-        <div class="el-col-8">
-            <div class="nav-button">
-                <i class="el-icon-document-add"></i>
-                <a href="/static/user-info.html">信息</a>
-            </div>
-        </div>
-        <div class="el-col-8">
-            <div class="nav-button">
-                <i class="el-icon-medal"></i>
-                <a href="/static/user-health.html">健康</a>
-            </div>
-        </div>
-    </div>
-</div>
 
+<!-- 动态插入导航栏 -->
+<div id="nav-placeholder"></div>
+
+<!-- 加载公共导航栏 -->
+<script>
+    fetch('/static/common/nav.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('nav-placeholder').innerHTML = data;
+        })
+        .catch(err => console.error('加载导航栏失败:', err));
+</script>
+
+<!-- 引入 Element UI JS 和 Vue（用于初始化组件） -->
+<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js "></script>
 <script>
     const token = localStorage.getItem('Authorization');
+
+    // 手动初始化 Element UI 的 Select 组件
+    new Vue({
+        el: '.evaluation-form',
+        mounted() {
+            this.$nextTick(() => {
+                // 可选：手动初始化 select 组件（根据需要）
+            });
+        }
+    });
 
     function submitEvaluation() {
         const cold = document.getElementById("cold").value;
@@ -223,13 +178,15 @@
         const mouthUlcer = document.getElementById("mouthUlcer").value;
         const throat = document.getElementById("throat").value;
 
-        // 表单验证：是否都选择了选项
-        if ([cold, sleep, digestion, fatigue, mouthUlcer, throat].includes("")) {
-            alert("请完整填写所有选项后再提交");
-            return;
-        }
-
         const evaluation = [cold, sleep, digestion, fatigue, mouthUlcer, throat].join(',');
+
+        // const userId = 123456; // 示例用户ID，实际应从登录状态中获取
+
+        const data = {
+            evaluation: evaluation,
+            // userId: userId,
+            // updateTime: new Date().toISOString().slice(0, 19).replace('T', ' ')
+        };
 
         fetch('/user/eval', {
             method: 'POST',
@@ -237,9 +194,10 @@
                 'Content-Type': 'application/json',
                 'Authorization': token
             },
-            body: JSON.stringify({ evaluation })
+            body: JSON.stringify(data)
         })
             .then(response => {
+                console.log('Response:', response)
                 if (response.ok) {
                     alert("提交成功！");
                     window.location.href = '/static/home.html';
