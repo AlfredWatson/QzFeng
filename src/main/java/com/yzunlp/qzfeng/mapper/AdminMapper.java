@@ -21,5 +21,5 @@ public interface AdminMapper {
 
     List<UserCheckupForm> selectUserCheckupFormByUserId(Long id);
 
-    Page<UserInfoBaseVO> selectAllUsers(int pageNum, int pageSize);
+    Page<UserInfoBaseVO> selectAllUsers();
 }
