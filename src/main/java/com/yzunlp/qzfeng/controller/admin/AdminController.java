@@ -35,6 +35,7 @@ public class AdminController {
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "5") int pageSize
     ) {
+        log.info("查询（分页）全部用户");
         return Result.success(adminService.getAllUsers(pageNum, pageSize));
     }
 
@@ -42,6 +43,7 @@ public class AdminController {
     @GetMapping("/getUserInfoHealthById/{id}")
     @Operation(summary = "查询用户信息与健康信息")
     public Result<UserInfoHealthVO> selectUserInfoHealthById(@PathVariable Long id) {
+        log.info("查询用户信息与健康信息(user-id={})",  id);
         return Result.success(adminService.selectUserInfoHealthById(id));
     }
 
@@ -49,8 +51,8 @@ public class AdminController {
     @GetMapping("/getUserQuestionnaireById/{id}")
     @Operation(summary = "查询用户所有填写过的问卷信息")
     public Result<UserQuestionnaireVO> selectUserQuestionnaireById(@PathVariable Long id) {
+        log.info("查询用户所有填写过的问卷信息(user-id={})",  id);
         return Result.success(adminService.selectUserQuestionnaireById(id));
     }
-
 
 }

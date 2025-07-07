@@ -48,6 +48,7 @@ public class AdminServiceImpl implements AdminService {
         PageHelper.startPage(pageNum, pageSize);
         Page<UserInfoBaseVO> page = adminMapper.selectAllUsers(pageNum, pageSize);
         long total = page.getTotal();
+        System.out.println("total:" + total);
         List<UserInfoBaseVO> result = page.getResult();
         return new PageResult(total, result);
     }

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>后台管理系统</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex h-screen bg-gray-100">
+
+<!-- 左侧侧边栏 -->
+<aside class="w-64 bg-gray-800 text-white flex flex-col">
+    <div class="p-6 text-2xl font-bold border-b border-gray-700">后台管理</div>
+    <nav class="flex-1">
+        <button id="homeBtn" class="w-full text-left px-6 py-3 hover:bg-gray-700">主页</button>
+        <button id="usersBtn" class="w-full text-left px-6 py-3 hover:bg-gray-700">查看所有用户信息</button>
+    </nav>
+</aside>
+
+<!-- 右侧内容区域 -->
+<main class="flex-1 p-6 overflow-y-auto">
+    <!-- 欢迎标语 -->
+    <div id="homePage" class="text-3xl font-semibold">欢迎来到后台管理系统</div>
+
+    <!-- 用户列表 -->
+    <div id="userListPage" class="hidden">
+        <h1 class="text-2xl font-bold mb-4">用户列表</h1>
+        <div class="mb-4 flex items-center space-x-4">
+            <label>每页显示：
+                <select id="pageSizeSelect" class="border rounded px-2 py-1">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                </select>
+            </label>
+            <label>跳转到第
+                <input type="number" id="pageNumInput" value="1" min="1" class="border rounded px-2 py-1 w-16" />
+                页
+            </label>
+            <button id="goPageBtn" class="bg-blue-500 text-white px-3 py-1 rounded">Go</button>
+        </div>
+        <div id="userList" class="space-y-2"></div>
+        <div class="mt-4 flex justify-between items-center">
+            <button id="prevPageBtn" class="bg-gray-500 text-white px-3 py-1 rounded">上一页</button>
+            <span id="pageInfo" class="text-gray-700"></span>
+            <button id="nextPageBtn" class="bg-gray-500 text-white px-3 py-1 rounded">下一页</button>
+        </div>
+    </div>
+</main>
+
+<!-- 用户详细信息面板 -->
+<aside id="detailPanel" class="w-96 bg-white shadow-lg border-l border-gray-300 p-4 fixed right-0 top-0 h-full hidden overflow-y-auto">
+    <div id="userDetails"></div>
+</aside>
+
+<script>
+    const homeBtn = document.getElementById("homeBtn");
+    const usersBtn = document.getElementById("usersBtn");
+    const homePage = document.getElementById("homePage");
+    const userListPage = document.getElementById("userListPage");
+    const userList = document.getElementById("userList");
+    const detailPanel = document.getElementById("detailPanel");
+    const userDetails = document.getElementById("userDetails");
+
+    let currentPage = 1;
+    let pageSize = 5;
+    let totalPages = 1;
+
+    // 切换主页和用户列表
+    homeBtn.onclick = () => {
+        homePage.classList.remove("hidden");
+        userListPage.classList.add("hidden");
+        detailPanel.classList.add("hidden");
+    };
+    usersBtn.onclick = () => {
+        homePage.classList.add("hidden");
+        userListPage.classList.remove("hidden");
+        detailPanel.classList.add("hidden");
+        loadUserList();
+    };
+
+    // 分页逻辑
+    document.getElementById("pageSizeSelect").onchange = (e) => {
+        pageSize = parseInt(e.target.value);
+        currentPage = 1;
+        loadUserList();
+    };
+    document.getElementById("goPageBtn").onclick = () => {
+        currentPage = parseInt(document.getElementById("pageNumInput").value);
+        loadUserList();
+    };
+    document.getElementById("prevPageBtn").onclick = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            loadUserList();
+        }
+    };
+    document.getElementById("nextPageBtn").onclick = () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            loadUserList();
+        }
+    };
+
+    // 加载用户列表
+    function loadUserList() {
+        axios.get(`/admin/userList?pageNum=${currentPage}&pageSize=${pageSize}`)
+            .then(res => {
+                const data = res.data.data;
+                const users = data.records;
+                console.log(data)
+                console.log(users)
+                totalPages = Math.ceil(data.total / pageSize);
+                console.log(totalPages)
+                document.getElementById("pageInfo").textContent = `第 ${currentPage} 页 / 共 ${totalPages} 页`;
+                userList.innerHTML = users.map(user => `
+                        <div class="flex justify-between items-center bg-white p-4 shadow rounded">
+                            <div>
+                                <p><strong>Phone:</strong> ${user.phone}</p>
+                                <p><strong>Name:</strong> ${user.name}</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="showHealthInfo(${user.id})" class="bg-green-500 text-white px-2 py-1 rounded">健康信息</button>
+                                <button onclick="showQuestionnaire(${user.id})" class="bg-blue-500 text-white px-2 py-1 rounded">问卷信息</button>
+                            </div>
+                        </div>
+                    `).join("");
+            })
+            .catch(err => {
+                console.error(err);
+                alert("加载用户数据失败");
+            });
+    }
+
+    // 显示用户健康信息
+    window.showHealthInfo = function (userId) {
+        axios.get(`/admin/getUserInfoHealthById/${userId}`)
+            .then(res => {
+                const u = res.data.data;
+                userDetails.innerHTML = `
+                        <h2 class="text-xl font-bold mb-2">用户健康信息</h2>
+                        <p><strong>姓名:</strong> ${u.name}</p>
+                        <p><strong>电话:</strong> ${u.phone}</p>
+                        <p><strong>身份证:</strong> ${u.chinaId}</p>
+                        <p><strong>生日:</strong> ${u.birthday}</p>
+                        <p><strong>性别:</strong> ${u.sex === 1 ? "男" : "女"}</p>
+                        <p><strong>高血压:</strong> ${u.hypertension ? "是" : "否"}</p>
+                        <p><strong>糖尿病:</strong> ${u.diabetes ? "是" : "否"}</p>
+                        <p><strong>高血脂:</strong> ${u.hyperlipidemia ? "是" : "否"}</p>
+                        <p><strong>肿瘤:</strong> ${u.tumor ? "是" : "否"}</p>
+                    `;
+                detailPanel.classList.remove("hidden");
+            })
+            .catch(err => {
+                console.error(err);
+                alert("加载用户健康信息失败");
+            });
+    };
+
+    // 显示用户问卷信息
+    window.showQuestionnaire = function (userId) {
+        axios.get(`/admin/getUserQuestionnaireById/${userId}`)
+            .then(res => {
+                const q = res.data.data;
+                userDetails.innerHTML = `
+                        <h2 class="text-xl font-bold mb-2">用户问卷信息</h2>
+                        <h3 class="font-semibold">蜂胶使用情况</h3>
+                        <pre>${JSON.stringify(q.userPropolisList, null, 2)}</pre>
+                        <h3 class="font-semibold">主观评价</h3>
+                        <pre>${JSON.stringify(q.userEvalListerEval, null, 2)}</pre>
+                        <h3 class="font-semibold">体检问卷</h3>
+                        <pre>${JSON.stringify(q.userCheckupFormList, null, 2)}</pre>
+                    `;
+                detailPanel.classList.remove("hidden");
+            })
+            .catch(err => {
+                console.error(err);
+                alert("加载用户问卷信息失败");
+            });
+    };
+</script>
+</body>
+</html>

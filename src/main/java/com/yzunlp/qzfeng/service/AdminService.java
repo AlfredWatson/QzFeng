@@ -5,6 +5,7 @@ import com.yzunlp.qzfeng.domain.vo.UserInfoHealthVO;
 import com.yzunlp.qzfeng.domain.vo.UserQuestionnaireVO;
 
 public interface AdminService {
+
     UserInfoHealthVO selectUserInfoHealthById(Long id);
 
     UserQuestionnaireVO selectUserQuestionnaireById(Long id);
