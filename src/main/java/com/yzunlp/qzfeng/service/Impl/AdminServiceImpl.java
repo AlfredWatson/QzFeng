@@ -53,7 +53,8 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public PageResult getAllUsers(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        Page<UserInfoBaseVO> page = adminMapper.selectAllUsers(pageNum,pageSize);
+        List<UserInfoBaseVO> list = adminMapper.selectAllUsers();
+        Page<UserInfoBaseVO> page = (Page<UserInfoBaseVO>) list;
         long total = page.getTotal();
         List<UserInfoBaseVO> result = page.getResult();
         return new PageResult(total,result);

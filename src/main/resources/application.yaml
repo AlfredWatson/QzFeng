@@ -18,6 +18,14 @@ mybatis:
     #开启驼峰命名
     map-underscore-to-camel-case: true
 
+#pagehelper:
+#  helper-dialect:mysql
+#  reasonable:true
+#  support-methods-arguments:true
+#  params=count:countSql
+
+
+
 yzunlp:
   jwt:
     # 设置jwt签名加密时使用的秘钥   HMAC-SHA算法32字节
