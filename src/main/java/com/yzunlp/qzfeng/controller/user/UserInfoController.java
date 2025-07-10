@@ -76,9 +76,15 @@ public class UserInfoController {
         log.info("用户登录: {}", loginDTO);
         UserInfo userInfo = userInfoService.login(loginDTO);
 
+        int code_flag = 1;
         if (userInfo == null) {
-            log.info("用户不存在");
-            return Result.error("用户名或密码错误");
+            log.info("用户不存在, 自动注册");
+//            return Result.error("用户名或密码错误");
+            RegisterDTO registerDTO = new RegisterDTO();
+            registerDTO.setPhone(loginDTO.getPhone());
+            registerDTO.setName("Anonymous");
+            code_flag = code_flag + userInfoService.register(registerDTO);
+            userInfo = userInfoService.login(loginDTO);
         }
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
@@ -93,7 +99,7 @@ public class UserInfoController {
                 .phone(userInfo.getPhone())
                 .token(token)
                 .build();
-        return Result.success(loginVO);
+        return Result.success(code_flag, loginVO);
     }
 
 }

@@ -71,6 +71,14 @@ public class Result<T> implements Serializable {
         return result;
     }
 
+    public static <T> Result<T> success(Integer code, T object) {
+        Result<T> result = new Result<T>();
+        result.setCode(code);
+        result.setMsg("操作成功");
+        result.setData(object);
+        return result;
+    }
+
     public static <T> Result<T> error(String msg) {
         Result<T> result = new Result<>();
         result.setCode(0);

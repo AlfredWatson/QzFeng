@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>蜂胶使用情况</title>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>一、蜂胶使用情况</h2>
+
+    <form id="propolisForm">
+        <p>
+            <strong>1.1 您是否服用过蜂胶？</strong><br>
+            <label class="el-radio">
+                <input type="radio" name="propolis" value="0" required onchange="toggleFields()"> 否
+            </label><br>
+            <label class="el-radio">
+                <input type="radio" name="propolis" value="1" onchange="toggleFields()"> 是
+            </label>
+        </p>
+
+        <div id="extraFields" class="hidden">
+            <p>
+                <strong>1.2 您开始服用蜂胶的年份：</strong><br>
+                <input type="text" id="propolisYear" name="propolisYear" class="el-input__inner" placeholder="请输入年份，如2020">
+            </p>
+
+            <p>
+                <strong>1.3 您通常服用蜂胶的频率如何？</strong><br>
+                <label class="el-radio">
+                    <input type="radio" name="propolisFrequency" value="A"> A. 频繁服用，每周大于4次
+                </label><br>
+                <label class="el-radio">
+                    <input type="radio" name="propolisFrequency" value="B"> B. 经常服用，每周1-3次
+                </label><br>
+                <label class="el-radio">
+                    <input type="radio" name="propolisFrequency" value="C"> C. 偶尔服用，每周1次
+                </label><br>
+                <label class="el-radio">
+                    <input type="radio" name="propolisFrequency" value="D"> D. 以前未服用
+                </label>
+            </p>
+        </div>
+
+        <button type="submit" class="submit-btn">提交</button>
+    </form>
+</div>
+
+<script>
+    const token = localStorage.getItem('Authorization');
+    console.log(token)
+</script>
+
+</body>
+</html>

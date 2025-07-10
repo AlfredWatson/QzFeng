@@ -28,6 +28,10 @@ public class UserInfoServiceImpl implements UserInfoService {
         // 检查手机号是否已存在
         UserInfo existingUser = userInfoMapper.selectByPhone(loginDTO.getPhone());
         if (existingUser != null) {
+            log.info("用户已存在, 校验密码");
+            String pwd = loginDTO.getPhone();
+            pwd = pwd.substring(pwd.length() - 6);
+            loginDTO.setPassword(pwd);
             return userInfoMapper.selectByPhoneAndPassword(loginDTO);
         } else {
             return null;
@@ -48,7 +52,10 @@ public class UserInfoServiceImpl implements UserInfoService {
             // 用户已存在，注册失败
             return 0;
         } else {
-            // 注册，插入用户数据
+            // 注册，插入用户数据，密码设置为手机号后6位
+            String pwd = registerDTO.getPhone();
+            pwd = pwd.substring(pwd.length() - 6);
+            registerDTO.setPassword(pwd);
             return userInfoMapper.addUser(registerDTO);
         }
     }
