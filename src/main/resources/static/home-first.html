@@ -1,63 +1,356 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>填写基本信息</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用户调查问卷</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
 
-<div class="form-container">
-    <h2>填写用户基本信息</h2>
-
-    <form id="userInfoForm">
-        <div class="el-form-item">
-            <label for="phone" class="el-form-item__label">手机号：</label>
-            <input type="text" id="phone" class="el-input__inner" readonly/>
+<div class="container mt-4 mb-5">
+    <h2 class="text-center mb-4">用户调查问卷</h2>
+    <form id="surveyForm" enctype="multipart/form-data">
+        <!-- 一、基本信息 -->
+        <h5 class="mb-3">一、基本信息</h5>
+        <div class="mb-3">
+            <label for="name" class="form-label">姓名</label>
+            <input type="text" class="form-control" id="name" name="name" required>
         </div>
-
-        <div class="el-form-item">
-            <label for="name" class="el-form-item__label">姓&nbsp;&nbsp;名：</label>
-            <input type="text" id="name" class="el-input__inner" required/>
+        <div class="mb-3">
+            <label for="chinaId" class="form-label">身份证号码</label>
+            <input type="text" class="form-control" id="chinaId" name="chinaId" required>
         </div>
-
-        <div class="el-form-item">
-            <label for="password" class="el-form-item__label">密&nbsp;&nbsp;码：</label>
-            <input type="password" id="password" class="el-input__inner"/>
+        <div class="mb-3">
+            <label for="birthday" class="form-label">出生日期</label>
+            <input type="date" class="form-control" id="birthday" name="birthday" required>
         </div>
-
-        <div class="el-form-item">
-            <label for="chinaId" class="el-form-item__label">身份证号：</label>
-            <input type="text" id="chinaId" class="el-input__inner"/>
-        </div>
-
-        <div class="el-form-item">
-            <label for="birthday" class="el-form-item__label">出生日期：</label>
-            <input type="date" id="birthday" class="el-input__inner"/>
-        </div>
-
-        <div class="el-form-item">
-            <label class="el-form-item__label">性&nbsp;&nbsp;别：</label>
-            <select id="sex" class="el-select">
+        <div class="mb-3">
+            <label class="form-label">性别</label>
+            <select class="form-select" id="sex" name="sex" required>
+                <option value="">请选择</option>
                 <option value="1">男</option>
                 <option value="2">女</option>
             </select>
         </div>
-
-        <div class="el-form-item">
-            <label for="areaCode" class="el-form-item__label">地区编码：</label>
-            <input type="text" id="areaCode" class="el-input__inner"/>
+        <div class="mb-3">
+            <label for="areaCode" class="form-label">地区编码</label>
+            <input type="number" class="form-control" id="areaCode" name="areaCode" required>
         </div>
 
-        <button type="submit" class="submit-btn">提交</button>
+
+        <!-- 二、健康情况 -->
+        <!-- 高血压 -->
+        <div class="mb-3">
+            <label class="form-label">2.1.1 您是否有高血压？</label>
+            <select class="form-select health-condition" id="hypertension" name="hypertension"
+                    data-target="hypertensionDetails" required>
+                <option value="">请选择</option>
+                <option value="false">无 (0)</option>
+                <option value="true">有 (1)</option>
+            </select>
+        </div>
+        <div id="hypertensionDetails" class="health-details d-none">
+            <div class="mb-3">
+                <label for="hypertensionYear" class="form-label">病程 (年)</label>
+                <input type="number" class="form-control" id="hypertensionYear" name="hypertensionYear">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">长期规律服用药物</label>
+                <select class="form-select" id="hypertensionDrug" name="hypertensionDrug">
+                    <option value="">请选择</option>
+                    <option value="false">否 (0)</option>
+                    <option value="true">是 (1)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 糖尿病 -->
+        <div class="mb-3">
+            <label class="form-label">2.2.1 您是否有糖尿病？</label>
+            <select class="form-select health-condition" id="diabetes" name="diabetes" data-target="diabetesDetails">
+                <option value="">请选择</option>
+                <option value="false">无 (0)</option>
+                <option value="true">有 (1)</option>
+            </select>
+        </div>
+        <div id="diabetesDetails" class="health-details d-none">
+            <div class="mb-3">
+                <label for="diabetesYear" class="form-label">病程 (年)</label>
+                <input type="number" class="form-control" id="diabetesYear" name="diabetesYear">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">长期规律服用药物</label>
+                <select class="form-select" id="diabetesDrug" name="diabetesDrug">
+                    <option value="">请选择</option>
+                    <option value="false">否 (0)</option>
+                    <option value="true">是 (1)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 高血脂 -->
+        <div class="mb-3">
+            <label class="form-label">2.3.1 您是否有高血脂？</label>
+            <select class="form-select health-condition" id="hyperlipidemia" name="hyperlipidemia"
+                    data-target="hyperlipidemiaDetails">
+                <option value="">请选择</option>
+                <option value="false">无 (0)</option>
+                <option value="true">有 (1)</option>
+            </select>
+        </div>
+        <div id="hyperlipidemiaDetails" class="health-details d-none">
+            <div class="mb-3">
+                <label for="hyperlipidemiaYear" class="form-label">病程 (年)</label>
+                <input type="number" class="form-control" id="hyperlipidemiaYear" name="hyperlipidemiaYear">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">长期规律服用药物</label>
+                <select class="form-select" id="hyperlipidemiaDrug" name="hyperlipidemiaDrug">
+                    <option value="">请选择</option>
+                    <option value="false">否 (0)</option>
+                    <option value="true">是 (1)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 肿瘤 -->
+        <div class="mb-3">
+            <label class="form-label">2.4.1 您是否有肿瘤？</label>
+            <select class="form-select" id="tumor" name="tumor" required>
+                <option value="">请选择</option>
+                <option value="false">无 (0)</option>
+                <option value="true">有 (1)</option>
+            </select>
+        </div>
+
+
+        <!-- 三、蜂胶使用情况 -->
+        <h5 class="mt-4 mb-3">三、蜂胶使用情况</h5>
+        <div class="mb-3">
+            <label class="form-label">3.1 您是否服用过蜂胶</label>
+            <select class="form-select conditional-select" id="propolis" name="propolis" data-target="propolisDetails">
+                <option value="">请选择</option>
+                <option value="false">否 (0)</option>
+                <option value="true">是 (1)</option>
+            </select>
+        </div>
+        <div id="propolisDetails" class="conditional-details d-none">
+            <div class="mb-3">
+                <label for="propolisYear" class="form-label">3.2 您开始服用蜂胶的年份</label>
+                <input type="number" class="form-control" id="propolisYear" name="propolisYear" placeholder="例如：2020">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">3.3 您通常服用蜂胶的频率</label>
+                <select class="form-select" id="propolisFrequency" name="propolisFrequency">
+                    <option value="">请选择</option>
+                    <option value="A">A. 频繁服用，每周 >4 次</option>
+                    <option value="B">B. 经常服用，每周 1-3 次</option>
+                    <option value="C">C. 偶尔服用，每周 1 次</option>
+                    <option value="D">D. 以前未服用</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 四、主观评估 -->
+        <h5 class="mt-4 mb-3">四、主观评估</h5>
+        <p class="text-muted">每项请选择评分：0=无效, 1=有效, 2=无此项, 3=不详</p>
+        <div class="mb-3">
+            <label class="form-label">1. 感冒较以往次数减少</label>
+            <select class="form-select evaluation-item" required>
+                <option value="">请选择</option>
+                <option value="0">0 - 无效</option>
+                <option value="1">1 - 有效</option>
+                <option value="2">2 - 无此项</option>
+                <option value="3">3 - 不详</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">2. 睡眠质量改善</label>
+            <select class="form-select evaluation-item" required>
+                <option value="">请选择</option>
+                <option value="0">0 - 无效</option>
+                <option value="1">1 - 有效</option>
+                <option value="2">2 - 无此项</option>
+                <option value="3">3 - 不详</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">3. 胃肠道功能改善</label>
+            <select class="form-select evaluation-item" required>
+                <option value="">请选择</option>
+                <option value="0">0 - 无效</option>
+                <option value="1">1 - 有效</option>
+                <option value="2">2 - 无此项</option>
+                <option value="3">3 - 不详</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">4. 身体疲乏感减轻</label>
+            <select class="form-select evaluation-item" required>
+                <option value="">请选择</option>
+                <option value="0">0 - 无效</option>
+                <option value="1">1 - 有效</option>
+                <option value="2">2 - 无此项</option>
+                <option value="3">3 - 不详</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">5. 口腔溃疡次数减少</label>
+            <select class="form-select evaluation-item" required>
+                <option value="">请选择</option>
+                <option value="0">0 - 无效</option>
+                <option value="1">1 - 有效</option>
+                <option value="2">2 - 无此项</option>
+                <option value="3">3 - 不详</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">6. 改善咽喉部不适感</label>
+            <select class="form-select evaluation-item" required>
+                <option value="">请选择</option>
+                <option value="0">0 - 无效</option>
+                <option value="1">1 - 有效</option>
+                <option value="2">2 - 无此项</option>
+                <option value="3">3 - 不详</option>
+            </select>
+        </div>
+        <!-- 隐藏字段 -->
+        <input type="hidden" id="evaluation" name="evaluation">
+
+        <!-- 五、体检单 -->
+        <h5 class="mt-4 mb-3">五、体检单</h5>
+        <div class="mb-3">
+            <label class="form-label">5.1 上传体检报告</label>
+            <input class="form-control" type="file" id="picFile" name="picFile" accept="image/*" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">提交</button>
     </form>
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     const token = localStorage.getItem('Authorization');
-    console.log(token)
-</script>
 
+    // 监听健康情况下拉框变化
+    document.querySelectorAll('.health-condition').forEach(select => {
+        select.addEventListener('change', function () {
+            const details = document.getElementById(this.dataset.target);
+            if (this.value === "true") {
+                details.classList.remove('d-none');
+            } else {
+                details.classList.add('d-none');
+                // 清空隐藏区域的值
+                details.querySelectorAll('input, select').forEach(input => input.value = '');
+            }
+        });
+    });
+
+    // 动态显示/隐藏病程和服药
+    document.querySelectorAll('.conditional-select').forEach(select => {
+        select.addEventListener('change', function () {
+            const details = document.getElementById(this.dataset.target);
+            if (this.value === "true") {
+                details.classList.remove('d-none');
+            } else {
+                details.classList.add('d-none');
+                // 清空隐藏区域的值
+                details.querySelectorAll('input, select').forEach(input => input.value = '');
+            }
+        });
+    });
+
+    document.getElementById('surveyForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 合并六项主观评估
+        const evalItems = document.querySelectorAll('.evaluation-item');
+        const evalValues = [];
+        let hasEmpty = false;
+        evalItems.forEach(select => {
+            if (!select.value) hasEmpty = true;
+            evalValues.push(select.value);
+        });
+        if (hasEmpty) {
+            alert('请完成所有主观评估项');
+            return;
+        }
+        document.getElementById('evaluation').value = evalValues.join(',');
+
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+            if (value === "true") value = true;
+            if (value === "false") value = false;
+            data[key] = value;
+        });
+
+        fetch('/user/all/saveAll', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.code === 1) {
+                    alert("提交成功，正在跳转登录界面");
+                    window.location.href = "/static/login.html";
+                } else {
+                    alert("提交失败：" + result.msg);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("提交异常，请稍后重试");
+            });
+    });
+
+    // document.getElementById('surveyForm').addEventListener('submit', function (e) {
+    //     e.preventDefault();
+    //
+    //     const form = this;
+    //     const formData = new FormData(form); // 自动包含所有输入字段和文件
+    //
+    //     // 合并主观评估 (拼接6项评分到 evaluation)
+    //     const evalItems = document.querySelectorAll('.evaluation-item');
+    //     const evalValues = [];
+    //     let hasEmpty = false;
+    //     evalItems.forEach(select => {
+    //         if (!select.value) hasEmpty = true;
+    //         evalValues.push(select.value);
+    //     });
+    //     if (hasEmpty) {
+    //         alert('请完成所有主观评估项');
+    //         return;
+    //     }
+    //     formData.set('evaluation', evalValues.join(','));
+    //
+    //     fetch('/user/all/saveAll', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Authorization': token
+    //         },
+    //         body: formData
+    //     })
+    //         .then(response => response.json())
+    //         .then(result => {
+    //             if (result.code === 1) {
+    //                 alert("提交成功，正在跳转登录界面");
+    //                 window.location.href = "/static/login.html";
+    //             } else {
+    //                 alert("提交失败: " + result.msg);
+    //             }
+    //         })
+    //         .catch(err => {
+    //             console.error(err);
+    //             alert("提交异常，请稍后重试");
+    //         });
+    // });
+</script>
 </body>
 </html>

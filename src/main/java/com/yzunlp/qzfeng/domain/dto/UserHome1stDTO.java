@@ -16,9 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserHome1stDTO {
-    private String phone; // 用户的电话，唯一
     private String name; // 用户的姓名
-    private String password; // 用户的密码
     private String chinaId; // 用户的身份证号
     private Date birthday; // 用户的生日
     private Short sex; // 用户的性别，男1，女2
@@ -40,6 +38,4 @@ public class UserHome1stDTO {
     private String propolisFrequency; // 蜂胶使用频率(单选: ABCD)
 
     private String evaluation; // 使用逗号分割，共六个评分(评分范围[0, 3])
-
-    private String picUrl; // 体检单(图片)地址
 }

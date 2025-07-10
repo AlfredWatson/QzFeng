@@ -103,12 +103,15 @@
                 })
                     .then(res => res.json())
                     .then(data => {
+                        console.log(data)
                         if (data.code > 0) {
-                            // console.log(data.data.token);
+                            console.log(data.data.token)
                             localStorage.setItem('Authorization', data.data.token);
-                            if (data.data.code === 1) {
+                            if (Number(data.code) === 1) {
+                                alert("老用户");
                                 window.location.href = 'home.html';
                             } else {
+                                alert("新用户");
                                 window.location.href = 'home-first.html';
                             }
                         } else {

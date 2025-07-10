@@ -99,6 +99,7 @@ public class UserInfoController {
                 .phone(userInfo.getPhone())
                 .token(token)
                 .build();
+        log.info("用户登录成功, code={}", code_flag);
         return Result.success(code_flag, loginVO);
     }
 

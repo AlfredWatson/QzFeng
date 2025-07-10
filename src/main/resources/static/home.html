@@ -1,57 +1,187 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>蜂胶使用情况</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用户调查问卷</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
 
-<div class="form-container">
-    <h2>一、蜂胶使用情况</h2>
+<div class="container mt-4 mb-5">
+    <h2 class="text-center mb-4">用户调查问卷</h2>
+    <form id="surveyForm" enctype="multipart/form-data">
 
-    <form id="propolisForm">
-        <p>
-            <strong>1.1 您是否服用过蜂胶？</strong><br>
-            <label class="el-radio">
-                <input type="radio" name="propolis" value="0" required onchange="toggleFields()"> 否
-            </label><br>
-            <label class="el-radio">
-                <input type="radio" name="propolis" value="1" onchange="toggleFields()"> 是
-            </label>
-        </p>
-
-        <div id="extraFields" class="hidden">
-            <p>
-                <strong>1.2 您开始服用蜂胶的年份：</strong><br>
-                <input type="text" id="propolisYear" name="propolisYear" class="el-input__inner" placeholder="请输入年份，如2020">
-            </p>
-
-            <p>
-                <strong>1.3 您通常服用蜂胶的频率如何？</strong><br>
-                <label class="el-radio">
-                    <input type="radio" name="propolisFrequency" value="A"> A. 频繁服用，每周大于4次
-                </label><br>
-                <label class="el-radio">
-                    <input type="radio" name="propolisFrequency" value="B"> B. 经常服用，每周1-3次
-                </label><br>
-                <label class="el-radio">
-                    <input type="radio" name="propolisFrequency" value="C"> C. 偶尔服用，每周1次
-                </label><br>
-                <label class="el-radio">
-                    <input type="radio" name="propolisFrequency" value="D"> D. 以前未服用
-                </label>
-            </p>
+        <!-- 三、蜂胶使用情况 -->
+        <h5 class="mt-4 mb-3">三、蜂胶使用情况</h5>
+        <div class="mb-3">
+            <label class="form-label">3.1 您是否服用过蜂胶</label>
+            <select class="form-select conditional-select" id="propolis" name="propolis" data-target="propolisDetails">
+                <option value="">请选择</option>
+                <option value="false">否 (0)</option>
+                <option value="true">是 (1)</option>
+            </select>
+        </div>
+        <div id="propolisDetails" class="conditional-details d-none">
+            <div class="mb-3">
+                <label for="propolisYear" class="form-label">3.2 您开始服用蜂胶的年份</label>
+                <input type="number" class="form-control" id="propolisYear" name="propolisYear" placeholder="例如：2020">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">3.3 您通常服用蜂胶的频率</label>
+                <select class="form-select" id="propolisFrequency" name="propolisFrequency">
+                    <option value="">请选择</option>
+                    <option value="A">A. 频繁服用，每周 >4 次</option>
+                    <option value="B">B. 经常服用，每周 1-3 次</option>
+                    <option value="C">C. 偶尔服用，每周 1 次</option>
+                    <option value="D">D. 以前未服用</option>
+                </select>
+            </div>
         </div>
 
-        <button type="submit" class="submit-btn">提交</button>
+        <!-- 四、主观评估 -->
+        <h5 class="mt-4 mb-3">四、主观评估</h5>
+        <p class="text-muted">每项请选择评分：0=无效, 1=有效, 2=无此项, 3=不详</p>
+        <div class="mb-3">
+            <label class="form-label">1. 感冒较以往次数减少</label>
+            <select class="form-select evaluation-item" required>
+                <option value="">请选择</option>
+                <option value="0">0 - 无效</option>
+                <option value="1">1 - 有效</option>
+                <option value="2">2 - 无此项</option>
+                <option value="3">3 - 不详</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">2. 睡眠质量改善</label>
+            <select class="form-select evaluation-item" required>
+                <option value="">请选择</option>
+                <option value="0">0 - 无效</option>
+                <option value="1">1 - 有效</option>
+                <option value="2">2 - 无此项</option>
+                <option value="3">3 - 不详</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">3. 胃肠道功能改善</label>
+            <select class="form-select evaluation-item" required>
+                <option value="">请选择</option>
+                <option value="0">0 - 无效</option>
+                <option value="1">1 - 有效</option>
+                <option value="2">2 - 无此项</option>
+                <option value="3">3 - 不详</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">4. 身体疲乏感减轻</label>
+            <select class="form-select evaluation-item" required>
+                <option value="">请选择</option>
+                <option value="0">0 - 无效</option>
+                <option value="1">1 - 有效</option>
+                <option value="2">2 - 无此项</option>
+                <option value="3">3 - 不详</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">5. 口腔溃疡次数减少</label>
+            <select class="form-select evaluation-item" required>
+                <option value="">请选择</option>
+                <option value="0">0 - 无效</option>
+                <option value="1">1 - 有效</option>
+                <option value="2">2 - 无此项</option>
+                <option value="3">3 - 不详</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">6. 改善咽喉部不适感</label>
+            <select class="form-select evaluation-item" required>
+                <option value="">请选择</option>
+                <option value="0">0 - 无效</option>
+                <option value="1">1 - 有效</option>
+                <option value="2">2 - 无此项</option>
+                <option value="3">3 - 不详</option>
+            </select>
+        </div>
+        <!-- 隐藏字段 -->
+        <input type="hidden" id="evaluation" name="evaluation">
+
+        <!-- 五、体检单 -->
+        <h5 class="mt-4 mb-3">五、体检单</h5>
+        <div class="mb-3">
+            <label for="picUrl" class="form-label">提交体检报告（图片地址）</label>
+            <input type="text" class="form-control" id="picUrl" name="picUrl" placeholder="图片URL">
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">提交</button>
     </form>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     const token = localStorage.getItem('Authorization');
-    console.log(token)
-</script>
 
+    // 动态显示/隐藏病程和服药
+    document.querySelectorAll('.conditional-select').forEach(select => {
+        select.addEventListener('change', function () {
+            const details = document.getElementById(this.dataset.target);
+            if (this.value === "true") {
+                details.classList.remove('d-none');
+            } else {
+                details.classList.add('d-none');
+                // 清空隐藏区域的值
+                details.querySelectorAll('input, select').forEach(input => input.value = '');
+            }
+        });
+    });
+
+    document.getElementById('surveyForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 合并六项主观评估
+        const evalItems = document.querySelectorAll('.evaluation-item');
+        const evalValues = [];
+        let hasEmpty = false;
+        evalItems.forEach(select => {
+            if (!select.value) hasEmpty = true;
+            evalValues.push(select.value);
+        });
+        if (hasEmpty) {
+            alert('请完成所有主观评估项');
+            return;
+        }
+        document.getElementById('evaluation').value = evalValues.join(',');
+
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+            if (value === "true") value = true;
+            if (value === "false") value = false;
+            data[key] = value;
+        });
+
+        fetch('/user/all/saveQuestionnaires', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.code === 1) {
+                    alert("提交成功，正在跳转登录界面");
+                    window.location.href = "/static/login.html";
+                } else {
+                    alert("提交失败：" + result.msg);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("提交异常，请稍后重试");
+            });
+    });
+</script>
 </body>
 </html>
