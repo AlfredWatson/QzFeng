@@ -194,19 +194,19 @@
         <div class="el-col-8">
             <div class="nav-button">
                 <i class="el-icon-s-home"></i>
-                <a href="/static/home.html">主页</a>
+                <a href="/user/home.html">主页</a>
             </div>
         </div>
         <div class="el-col-8">
             <div class="nav-button">
                 <i class="el-icon-document-add"></i>
-                <a href="/static/user-info.html">信息</a>
+                <a href="/user/user-info.html">信息</a>
             </div>
         </div>
         <div class="el-col-8">
             <div class="nav-button">
                 <i class="el-icon-medal"></i>
-                <a href="/static/user-health.html">健康</a>
+                <a href="/user/user-health.html">健康</a>
             </div>
         </div>
     </div>
@@ -242,7 +242,7 @@
             .then(response => {
                 if (response.ok) {
                     alert("提交成功！");
-                    window.location.href = '/static/home.html';
+                    window.location.href = '../user/home.html';
                 } else {
                     alert("提交失败，请重试。");
                 }

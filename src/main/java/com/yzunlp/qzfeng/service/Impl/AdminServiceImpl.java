@@ -6,7 +6,7 @@ import com.yzunlp.qzfeng.common.PageResult;
 import com.yzunlp.qzfeng.domain.po.UserInfo;
 import com.yzunlp.qzfeng.domain.vo.UserInfoBaseVO;
 import com.yzunlp.qzfeng.domain.vo.UserInfoHealthVO;
-import com.yzunlp.qzfeng.domain.vo.userQuestionnaireVO;
+import com.yzunlp.qzfeng.domain.vo.UserQuestionnaireVO;
 import com.yzunlp.qzfeng.mapper.AdminMapper;
 import com.yzunlp.qzfeng.mapper.UserInfoMapper;
 import com.yzunlp.qzfeng.service.AdminService;
@@ -28,12 +28,10 @@ public class AdminServiceImpl implements AdminService {
 
     private final AdminMapper adminMapper;
 
-
     @Autowired
-    public AdminServiceImpl(AdminMapper adminMapper){
-        this.adminMapper  = adminMapper;
+    public AdminServiceImpl(AdminMapper adminMapper) {
+        this.adminMapper = adminMapper;
     }
-
 
     @Override
     public UserInfoHealthVO selectUserInfoHealthById(Long id) {
@@ -42,8 +40,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public userQuestionnaireVO selectUserQuestionnaireById(Long id) {
-        userQuestionnaireVO vo = new userQuestionnaireVO();
+    public UserQuestionnaireVO selectUserQuestionnaireById(Long id) {
+        UserQuestionnaireVO vo = new UserQuestionnaireVO();
         vo.setUserPropolisList(adminMapper.selectUserPropolisByUserId(id));
         vo.setUserEvalListerEval(adminMapper.selectUserEvalByUserId(id));
         vo.setUserCheckupFormList(adminMapper.selectUserCheckupFormByUserId(id));
@@ -57,6 +55,6 @@ public class AdminServiceImpl implements AdminService {
         Page<UserInfoBaseVO> page = (Page<UserInfoBaseVO>) list;
         long total = page.getTotal();
         List<UserInfoBaseVO> result = page.getResult();
-        return new PageResult(total,result);
+        return new PageResult(total, result);
     }
 }

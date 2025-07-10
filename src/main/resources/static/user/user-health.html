@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>填写健康信息</title>
 
     <!-- 引入 Element UI 样式 -->
@@ -10,7 +11,7 @@
     <style>
         body {
             margin: 0;
-            padding-bottom: 60px; /* 避免内容被导航栏遮挡 */
+            padding-bottom: 70px; /* 避免内容被导航栏遮挡 */
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
         }
@@ -21,17 +22,60 @@
             background: #fff;
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
         }
 
         h2 {
             text-align: center;
             margin-bottom: 20px;
+            color: #333;
+        }
+
+        .el-form-item {
+            margin-bottom: 20px;
+        }
+
+        .el-checkbox {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .inline-group {
+            margin-left: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .inline-group label {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .inline-group input[type="number"] {
+            width: 80px;
+            padding: 5px;
+            margin: 0 5px;
         }
 
         .submit-btn {
             margin-top: 20px;
             width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #409EFF;
+            color: white;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #337ecc;
         }
 
         nav {
@@ -44,26 +88,55 @@
             padding: 10px 0;
             border-top: 1px solid #e4e7ed;
             z-index: 9999;
-            box-shadow: 0 -2px 12px 0 rgba(0,0,0,0.1);
+            box-shadow: 0 -2px 12px 0 rgba(0, 0, 0, 0.1);
         }
 
-        nav a {
-            color: #1a73e8;
+        .hidden {
+            display: none !important;
+        }
+
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            border-top: 1px solid #e4e4e4;
+            padding: 10px 0;
+            z-index: 999;
+        }
+
+        .nav-button {
+            font-size: 14px;
+            text-align: center;
+            color: #666;
+        }
+
+        .nav-button a {
+            color: #666;
             text-decoration: none;
-            margin: 0 10px;
+            font-size: 12px;
         }
 
-        nav a:hover {
-            text-decoration: underline;
+        .nav-button i {
+            font-size: 28px; /* 图标大小 */
+            display: block;
+            margin-bottom: 4px;
         }
 
-        .inline-group label {
-            display: inline-block;
-            margin-right: 10px;
+        /* 模拟 el-row / el-col 布局 */
+        .el-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .el-col-8 {
+            width: 33.33%;
+            text-align: center;
         }
 
-        .inline-group input[type="number"] {
-            width: 100px;
+        .el-button {
+            width: 100%;
         }
     </style>
 </head>
@@ -109,26 +182,33 @@
             </label>
         </div>
 
-        <button type="submit" class="el-button el-button--primary submit-btn">提交</button>
+        <button type="submit" class="submit-btn">提交</button>
     </form>
 </div>
 
-<!-- 动态插入导航栏 -->
-<div id="nav-placeholder"></div>
-
-<!-- 加载公共导航栏 -->
-<script>
-    fetch('/static/common/nav.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('nav-placeholder').innerHTML = data;
-        })
-        .catch(err => console.error('加载导航栏失败:', err));
-</script>
-
-<!-- 引入 Vue 和 Element UI JS -->
-<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
-<script src="https://unpkg.com/element-ui/lib/index.js "></script>
+<!-- 底部导航栏 -->
+<div class="footer-nav">
+    <div class="el-row">
+        <div class="el-col-8">
+            <div class="nav-button">
+                <i class="el-icon-s-home"></i>
+                <a href="/user/home.html">主页</a>
+            </div>
+        </div>
+        <div class="el-col-8">
+            <div class="nav-button">
+                <i class="el-icon-document-add"></i>
+                <a href="/user/user-info.html">信息</a>
+            </div>
+        </div>
+        <div class="el-col-8">
+            <div class="nav-button">
+                <i class="el-icon-medal"></i>
+                <a href="/user/user-health.html">健康</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     const token = localStorage.getItem('Authorization');
