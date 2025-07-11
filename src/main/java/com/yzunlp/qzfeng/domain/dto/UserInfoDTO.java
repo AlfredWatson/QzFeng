@@ -11,8 +11,8 @@ import java.util.Date;
 @Data
 public class UserInfoDTO {
     private Long id; // 用户的唯一标识码
-    private String name = "户晨风"; // 用户的姓名
-    private String password = "yzunlp"; // 用户的密码
+    private String name; // 用户的姓名
+    private String password; // 用户的密码
     private String chinaId; // 用户的身份证号
     private Date birthday; // 用户的生日
     private Short sex; // 用户的性别，男1，女2
