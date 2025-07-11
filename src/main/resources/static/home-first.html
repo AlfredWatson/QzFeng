@@ -224,6 +224,8 @@
         <div class="mb-3">
             <label class="form-label">5.1 上传体检报告</label>
             <input class="form-control" type="file" id="picFile" name="picFile" accept="image/*" required>
+            <input type="hidden" id="picUrl" name="picUrl">
+            <div id="preview" class="mt-3"></div>
         </div>
 
         <button type="submit" class="btn btn-primary w-100">提交</button>
@@ -262,7 +264,38 @@
         });
     });
 
-    document.getElementById('surveyForm').addEventListener('submit', function(e) {
+    document.getElementById('picFile').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/user/checkup/uploads', {
+            method: 'POST',
+            headers: {
+                'Authorization': token
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result);
+                if (result.code === 1) {
+                    // 保存返回的picUrl到隐藏字段
+                    document.getElementById('picUrl').value = result.data.picUrl;
+                    alert("图片上传成功");
+                } else {
+                    alert("图片上传失败: " + result.msg);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("上传图片出错，请重试");
+            });
+    });
+
+    document.getElementById('surveyForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
         // 合并六项主观评估
@@ -310,47 +343,6 @@
             });
     });
 
-    // document.getElementById('surveyForm').addEventListener('submit', function (e) {
-    //     e.preventDefault();
-    //
-    //     const form = this;
-    //     const formData = new FormData(form); // 自动包含所有输入字段和文件
-    //
-    //     // 合并主观评估 (拼接6项评分到 evaluation)
-    //     const evalItems = document.querySelectorAll('.evaluation-item');
-    //     const evalValues = [];
-    //     let hasEmpty = false;
-    //     evalItems.forEach(select => {
-    //         if (!select.value) hasEmpty = true;
-    //         evalValues.push(select.value);
-    //     });
-    //     if (hasEmpty) {
-    //         alert('请完成所有主观评估项');
-    //         return;
-    //     }
-    //     formData.set('evaluation', evalValues.join(','));
-    //
-    //     fetch('/user/all/saveAll', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Authorization': token
-    //         },
-    //         body: formData
-    //     })
-    //         .then(response => response.json())
-    //         .then(result => {
-    //             if (result.code === 1) {
-    //                 alert("提交成功，正在跳转登录界面");
-    //                 window.location.href = "/static/login.html";
-    //             } else {
-    //                 alert("提交失败: " + result.msg);
-    //             }
-    //         })
-    //         .catch(err => {
-    //             console.error(err);
-    //             alert("提交异常，请稍后重试");
-    //         });
-    // });
 </script>
 </body>
 </html>

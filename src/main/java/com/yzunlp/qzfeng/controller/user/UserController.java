@@ -21,26 +21,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
     @Operation(summary = "用户第一次")
     @PostMapping("/saveAll")
-    public Result<Void> saveAll(
-            @RequestBody UserHome1stDTO userHome1stDTO
-//            @RequestParam("picFile") MultipartFile picFile
-    ) {
+    public Result<Void> saveAll(@RequestBody UserHome1stDTO userHome1stDTO) {
         log.info("用户fucking: {}", userHome1stDTO);
-//        String originalFilename = picFile.getOriginalFilename();
-//        log.info("用户fucking-pic: {}", originalFilename);
         // todo 保存 userHome1stDTO
         return Result.success();
     }
 
     @Operation(summary = "用户后续")
     @PostMapping("/saveQuestionnaires")
-    public Result<Void> saveQuestionnaires(
-            @RequestBody UserHomeDTO userHomeDTO
-//            @RequestParam("picFile") MultipartFile picFile
-    ) {
+    public Result<Void> saveQuestionnaires(@RequestBody UserHomeDTO userHomeDTO) {
         log.info("用户fucking-2: {}", userHomeDTO);
-//        String originalFilename = picFile.getOriginalFilename();
-//        log.info("用户fucking-2-pic: {}", originalFilename);
         // todo 保存 userHomeDTO
         return Result.success();
     }

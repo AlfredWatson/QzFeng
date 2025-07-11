@@ -71,7 +71,7 @@
             <el-button type="primary" @click="submitForm">登 录</el-button>
 <!--            <a href="/user/register.html" class="register-link">没有账号？去注册</a>-->
         </el-form>
-        <div class="result">{{ resultMsg }}</div>
+        <div class="result">{{resultMsg}}</div>
     </div>
 </div>
 
@@ -101,21 +101,21 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({phone, password})
                 })
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log(data)
-                        if (data.code > 0) {
-                            console.log(data.data.token)
-                            localStorage.setItem('Authorization', data.data.token);
-                            if (Number(data.code) === 1) {
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log(result)
+                        if (result.code > 0) {
+                            console.log(result.data.token)
+                            localStorage.setItem('Authorization', result.data.token);
+                            if (Number(result.code) === 1) {
                                 alert("老用户");
-                                window.location.href = 'home.html';
+                                window.location.href = '/static/home-sec.html';
                             } else {
                                 alert("新用户");
-                                window.location.href = 'home-first.html';
+                                window.location.href = '/static/home-first.html';
                             }
                         } else {
-                            this.resultMsg = data.msg;
+                            this.resultMsg = result.msg;
                             setTimeout(() => {
                                 this.resultMsg = '';
                             }, 3000);

@@ -38,4 +38,6 @@ public class UserHome1stDTO {
     private String propolisFrequency; // 蜂胶使用频率(单选: ABCD)
 
     private String evaluation; // 使用逗号分割，共六个评分(评分范围[0, 3])
+
+    private String picUrl; // 体检单(图片)地址
 }

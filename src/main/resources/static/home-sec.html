@@ -109,8 +109,10 @@
         <!-- 五、体检单 -->
         <h5 class="mt-4 mb-3">五、体检单</h5>
         <div class="mb-3">
-            <label for="picUrl" class="form-label">提交体检报告（图片地址）</label>
-            <input type="text" class="form-control" id="picUrl" name="picUrl" placeholder="图片URL">
+            <label class="form-label">5.1 上传体检报告</label>
+            <input class="form-control" type="file" id="picFile" name="picFile" accept="image/*" required>
+            <input type="hidden" id="picUrl" name="picUrl">
+            <div id="preview" class="mt-3"></div>
         </div>
 
         <button type="submit" class="btn btn-primary w-100">提交</button>
@@ -135,7 +137,39 @@
         });
     });
 
-    document.getElementById('surveyForm').addEventListener('submit', function(e) {
+    document.getElementById('picFile').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/user/checkup/uploads', {
+            method: 'POST',
+            headers: {
+                'Authorization': token
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result);
+                if (result.code === 1) {
+                    // 保存返回的picUrl到隐藏字段
+                    document.getElementById('picUrl').value = result.data.picUrl;
+                    alert("图片上传成功");
+                    console.log(result.data.picUrl)
+                } else {
+                    alert("图片上传失败: " + result.msg);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("上传图片出错，请重试");
+            });
+    });
+
+    document.getElementById('surveyForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
         // 合并六项主观评估
@@ -159,6 +193,9 @@
             if (value === "false") value = false;
             data[key] = value;
         });
+
+        console.log("hahhahhah");
+        console.log(data);
 
         fetch('/user/all/saveQuestionnaires', {
             method: 'POST',
