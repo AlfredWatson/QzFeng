@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -25,11 +28,15 @@ import java.util.UUID;
 @RequestMapping("/user/checkup")
 public class UserCheckupFormController {
 
-//    private static final String UPLOAD_DIR = "D:\\develop_cocos\\JavaProjects\\QzFeng\\src\\main\\resources\\uploads\\";
-    private static final String UPLOAD_DIR = "D:\\Code\\QzFeng\\src\\main\\resources\\uploads\\";
+    private static final String UPLOAD_DIR = "D:\\develop_cocos\\JavaProjects\\QzFeng\\src\\main\\resources\\uploads\\";
+//    private static final String UPLOAD_DIR = "D:\\Code\\QzFeng\\src\\main\\resources\\uploads\\";
+
+    private final UserCheckupFormService checkupFormService;
 
     @Autowired
-    private UserCheckupFormService checkupFormService;
+    public UserCheckupFormController(UserCheckupFormService checkupFormService) {
+        this.checkupFormService = checkupFormService;
+    }
 
     /**
      * 添加体检单图片地址
@@ -37,26 +44,66 @@ public class UserCheckupFormController {
     @Operation(summary = "用户上传体检报告（图片）")
     @PostMapping("/uploads")
     public Result<UserCheckupForm> addCheckupForm(@RequestParam("file") MultipartFile file) {
-        String originalFilename = file.getOriginalFilename();
+        log.info("用户上传图片(user-id={})", BaseContext.getCurrentId());
+        if (file.isEmpty()) {
+            return Result.error("上传失败:文件为空");
+        }
+        // 检查是否为图片
         try {
-            if (originalFilename != null) {
-                // 利用UUID构造新的文件名称
-                String objectName = UUID.randomUUID() + originalFilename;
-                // 文件的请求路径
-                String filePath = UPLOAD_DIR + objectName;
-                String returnImagePate = "http://127.0.0.1:18080/images/" + objectName;
-                file.transferTo(new File(filePath));
-
-                UserCheckupForm userCheckupForm = new UserCheckupForm();
-                userCheckupForm.setUserId(BaseContext.getCurrentId());
-                userCheckupForm.setPicUrl(returnImagePate);
-//                checkupFormService.add(userCheckupForm);
-                return Result.success(userCheckupForm);
+            BufferedImage image = ImageIO.read(file.getInputStream());
+            if (image == null) {
+                return Result.error("上传失败:文件不是有效图片");
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Result.error("上传失败:读取文件错误");
+        }
+
+        // 获取 MIME 类型
+        String contentType = file.getContentType();
+        log.info("MIME 类型: {}", contentType);
+        String extension = "img";
+        if (contentType != null) {
+            extension = contentType.substring(contentType.lastIndexOf("/") + 1).toLowerCase();
+            log.info("图片扩展名: {}", extension);
+        }
+
+        String fileName = "UID_" + BaseContext.getCurrentId().toString() + "_" + UUID.randomUUID() + "." + extension;
+        try {
+            file.transferTo(new File(UPLOAD_DIR + fileName));
+            log.info("{}",fileName);
+            UserCheckupForm userCheckupForm = new UserCheckupForm();
+            userCheckupForm.setUserId(BaseContext.getCurrentId());
+            userCheckupForm.setPicUrl(fileName);
+//            checkupFormService.add(userCheckupForm);
+            return Result.success(userCheckupForm);
+
         } catch (IOException e){
             e.printStackTrace();
+            return Result.error("上传失败，保存文件出错");
         }
-        return Result.error("上传失败");
+
+
+//        String originalFilename = file.getOriginalFilename();
+//        try {
+//            if (originalFilename != null) {
+//                // 利用UUID构造新的文件名称
+//                String objectName = UUID.randomUUID() + originalFilename;
+//                // 文件的请求路径
+//                String filePath = UPLOAD_DIR + objectName;
+//                String returnImagePate = "http://127.0.0.1:18080/images/" + objectName;
+//                file.transferTo(new File(filePath));
+//
+//                UserCheckupForm userCheckupForm = new UserCheckupForm();
+//                userCheckupForm.setUserId(BaseContext.getCurrentId());
+//                userCheckupForm.setPicUrl(returnImagePate);
+////                checkupFormService.add(userCheckupForm);
+//                return Result.success(userCheckupForm);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return Result.error("上传失败");
     }
 
     /**

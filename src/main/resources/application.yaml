@@ -4,7 +4,11 @@ spring:
   application:
     name: yzunlp-qzfeng-service
   profiles:
-    active: dev
+    active: test
+  servlet:
+    multipart:
+      max-file-size: 10MB     # 单个文件最大10MB
+      max-request-size: 20MB  # 总请求体最大20MB
   datasource:
     url: jdbc:mysql://${yzunlp.database.host}:${yzunlp.database.port}/${yzunlp.database.schema}?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -23,8 +27,6 @@ mybatis:
 #  reasonable:true
 #  support-methods-arguments:true
 #  params=count:countSql
-
-
 
 yzunlp:
   jwt:

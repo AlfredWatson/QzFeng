@@ -1,0 +1,7 @@
+yzunlp:
+  database:
+    host: ciwater_mysql
+    port: 3306
+    username: root
+    password: admin
+    schema: Questionnaire
