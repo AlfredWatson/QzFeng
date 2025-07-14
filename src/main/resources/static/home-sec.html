@@ -9,16 +9,6 @@
 </head>
 <body class="bg-light">
 
-<div class="nav-button">
-    <i class="el-icon-s-home"></i>
-    <a href="/static/shot.html">拍照1</a>
-</div>
-
-<div class="nav-button">
-    <i class="el-icon-s-home"></i>
-    <a href="/static/shot-gpt.html">拍照gpt</a>
-</div>
-
 <div class="container mt-4 mb-5">
     <h2 class="text-center mb-4">用户调查问卷</h2>
     <form id="surveyForm" enctype="multipart/form-data">
@@ -116,24 +106,14 @@
         <!-- 隐藏字段 -->
         <input type="hidden" id="evaluation" name="evaluation">
 
-         五、体检单
-                <h5 class="mt-4 mb-3">五、体检单</h5>
-                <div class="mb-3">
-                    <label class="form-label">5.1 上传体检报告</label>
-                    <input class="form-control" type="file" id="picFile" name="picFile" accept="image/*" required>
-                    <input type="hidden" id="picUrl" name="picUrl">
-                    <div id="preview" class="mt-3"></div>
-                </div>
-
-<!--        &lt;!&ndash; 五、体检单 &ndash;&gt;-->
-<!--        <h5 class="mt-4 mb-3">五、体检单</h5>-->
-<!--        <div class="mb-3">-->
-<!--            <label class="form-label">5.1 拍照上传体检报告</label>-->
-<!--            <input class="form-control d-none" type="file" id="picFile" accept="image/*" capture="environment">-->
-<!--            <button type="button" class="btn btn-primary w-100" id="takePhotoBtn">📸 拍照上传</button>-->
-<!--            <input type="hidden" id="picUrl" name="picUrl">-->
-<!--            <div id="preview" class="mt-3"></div>-->
-<!--        </div>-->
+        <!--五、体检单-->
+        <h5 class="mt-4 mb-3">五、体检单</h5>
+        <div class="mb-3">
+            <label class="form-label">5.1 上传体检报告</label>
+            <input class="form-control" type="file" id="picFile" name="picFile" accept="image/*" required>
+            <input type="hidden" id="picUrl" name="picUrl">
+            <div id="preview" class="mt-3"></div>
+        </div>
 
         <button type="submit" class="btn btn-primary w-100">提交</button>
     </form>
@@ -177,7 +157,7 @@
                 if (result.code === 1) {
                     // 保存返回的picUrl到隐藏字段
                     document.getElementById('picUrl').value = result.data.picUrl;
-                    alert("图片上传成功");
+                    // alert("图片上传成功");
                     console.log(result.data.picUrl)
                 } else {
                     alert("图片上传失败: " + result.msg);
@@ -188,47 +168,6 @@
                 alert("上传图片出错，请重试");
             });
     });
-
-    // // 点击按钮触发拍照
-    // document.getElementById('takePhotoBtn').addEventListener('click', function () {
-    //     document.getElementById('picFile').click();
-    // });
-    //
-    // // 图片选择后上传
-    // document.getElementById('picFile').addEventListener('change', function () {
-    //     const file = this.files[0];
-    //     if (!file) return;
-    //
-    //     const formData = new FormData();
-    //     formData.append('file', file);
-    //
-    //     fetch('/user/checkup/uploads', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Authorization': token
-    //         },
-    //         body: formData
-    //     })
-    //         .then(response => response.json())
-    //         .then(result => {
-    //             if (result.code === 1 && result.data) {
-    //                 const picUrl = result.data.picUrl; // 从UserCheckupForm取图片URL
-    //                 document.getElementById('picUrl').value = picUrl;
-    //
-    //                 // 显示预览
-    //                 document.getElementById('preview').innerHTML =
-    //                     `<img src="${picUrl}" class="img-fluid rounded mt-2" style="max-height: 300px;">`;
-    //
-    //                 alert("体检单上传成功");
-    //             } else {
-    //                 alert("上传失败: " + (result.msg || "未知错误"));
-    //             }
-    //         })
-    //         .catch(err => {
-    //             console.error(err);
-    //             alert("上传过程中出错，请重试");
-    //         });
-    // });
 
     document.getElementById('surveyForm').addEventListener('submit', function (e) {
         e.preventDefault();

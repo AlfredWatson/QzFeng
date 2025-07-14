@@ -8,13 +8,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -28,7 +31,8 @@ import java.util.UUID;
 @RequestMapping("/user/checkup")
 public class UserCheckupFormController {
 
-    private static final String UPLOAD_DIR = "D:\\develop_cocos\\JavaProjects\\QzFeng\\src\\main\\resources\\uploads\\";
+    private static final String UPLOAD_DIR = "\\data\\uploads\\";
+
 //    private static final String UPLOAD_DIR = "D:\\Code\\QzFeng\\src\\main\\resources\\uploads\\";
 
     private final UserCheckupFormService checkupFormService;
@@ -61,7 +65,7 @@ public class UserCheckupFormController {
 
         // 获取 MIME 类型
         String contentType = file.getContentType();
-        log.info("MIME 类型: {}", contentType);
+        log.info("图片MIME类型: {}", contentType);
         String extension = "img";
         if (contentType != null) {
             extension = contentType.substring(contentType.lastIndexOf("/") + 1).toLowerCase();
@@ -71,14 +75,14 @@ public class UserCheckupFormController {
         String fileName = "UID_" + BaseContext.getCurrentId().toString() + "_" + UUID.randomUUID() + "." + extension;
         try {
             file.transferTo(new File(UPLOAD_DIR + fileName));
-            log.info("{}",fileName);
+            log.info("图片保存地址: {}", UPLOAD_DIR + fileName);
             UserCheckupForm userCheckupForm = new UserCheckupForm();
             userCheckupForm.setUserId(BaseContext.getCurrentId());
             userCheckupForm.setPicUrl(fileName);
 //            checkupFormService.add(userCheckupForm);
             return Result.success(userCheckupForm);
 
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return Result.error("上传失败，保存文件出错");
         }
