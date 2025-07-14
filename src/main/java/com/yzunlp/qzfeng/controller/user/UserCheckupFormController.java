@@ -31,7 +31,7 @@ import java.util.UUID;
 @RequestMapping("/user/checkup")
 public class UserCheckupFormController {
 
-    private static final String UPLOAD_DIR = "\\data\\uploads\\";
+    private static final String UPLOAD_DIR = "/data/uploads/";
 
 //    private static final String UPLOAD_DIR = "D:\\Code\\QzFeng\\src\\main\\resources\\uploads\\";
 
