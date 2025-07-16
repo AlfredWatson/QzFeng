@@ -2,6 +2,7 @@ package com.yzunlp.qzfeng.controller.user;
 
 import com.yzunlp.qzfeng.common.BaseContext;
 import com.yzunlp.qzfeng.common.Result;
+import com.yzunlp.qzfeng.common.UploadProperties;
 import com.yzunlp.qzfeng.domain.po.UserCheckupForm;
 import com.yzunlp.qzfeng.service.UserCheckupFormService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,14 +32,14 @@ import java.util.UUID;
 @RequestMapping("/user/checkup")
 public class UserCheckupFormController {
 
-    private static final String UPLOAD_DIR = "/data/uploads/";
+//    private static final String UPLOAD_DIR = "/data/uploads/";
 
-//    private static final String UPLOAD_DIR = "D:\\Code\\QzFeng\\src\\main\\resources\\uploads\\";
-
+    private final UploadProperties uploadProperties;
     private final UserCheckupFormService checkupFormService;
 
     @Autowired
-    public UserCheckupFormController(UserCheckupFormService checkupFormService) {
+    public UserCheckupFormController(UploadProperties uploadProperties, UserCheckupFormService checkupFormService) {
+        this.uploadProperties = uploadProperties;
         this.checkupFormService = checkupFormService;
     }
 
@@ -74,8 +75,8 @@ public class UserCheckupFormController {
 
         String fileName = "UID_" + BaseContext.getCurrentId().toString() + "_" + UUID.randomUUID() + "." + extension;
         try {
-            file.transferTo(new File(UPLOAD_DIR + fileName));
-            log.info("图片保存地址: {}", UPLOAD_DIR + fileName);
+            file.transferTo(new File(uploadProperties.getUser_upload_path() + fileName));
+            log.info("图片保存地址: {}", uploadProperties.getUser_upload_path() + fileName);
             UserCheckupForm userCheckupForm = new UserCheckupForm();
             userCheckupForm.setUserId(BaseContext.getCurrentId());
             userCheckupForm.setPicUrl(fileName);

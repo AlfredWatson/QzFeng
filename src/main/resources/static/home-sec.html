@@ -13,11 +13,11 @@
     <h2 class="text-center mb-4">用户调查问卷</h2>
     <form id="surveyForm" enctype="multipart/form-data">
 
-        <!-- 三、蜂胶使用情况 -->
-        <h5 class="mt-4 mb-3">三、蜂胶使用情况</h5>
+        <!-- 蜂胶使用情况 -->
+        <h5 class="mt-4 mb-3">蜂胶使用情况</h5>
         <div class="mb-3">
-            <label class="form-label">3.1 您是否服用过蜂胶</label>
-            <select class="form-select conditional-select" id="propolis" name="propolis" data-target="propolisDetails">
+            <label class="form-label">1. 您是否服用过蜂胶</label>
+            <select class="form-select conditional-select" id="propolis" name="propolis" data-target="propolisDetails" required>
                 <option value="">请选择</option>
                 <option value="false">否 (0)</option>
                 <option value="true">是 (1)</option>
@@ -25,11 +25,14 @@
         </div>
         <div id="propolisDetails" class="conditional-details d-none">
             <div class="mb-3">
-                <label for="propolisYear" class="form-label">3.2 您开始服用蜂胶的年份</label>
-                <input type="number" class="form-control" id="propolisYear" name="propolisYear" placeholder="例如：2020">
+                <label class="form-label">2. 您开始服用蜂胶的年份</label>
+                <select class="form-select" id="propolisYear" name="propolisYear">
+                    <option value="">请选择年份</option>
+                    <!-- 用JS动态生成年份 -->
+                </select>
             </div>
             <div class="mb-3">
-                <label class="form-label">3.3 您通常服用蜂胶的频率</label>
+                <label class="form-label">3. 您通常服用蜂胶的频率</label>
                 <select class="form-select" id="propolisFrequency" name="propolisFrequency">
                     <option value="">请选择</option>
                     <option value="A">A. 频繁服用，每周 >4 次</option>
@@ -41,7 +44,7 @@
         </div>
 
         <!-- 四、主观评估 -->
-        <h5 class="mt-4 mb-3">四、主观评估</h5>
+        <h5 class="mt-4 mb-3">主观评估</h5>
         <p class="text-muted">每项请选择评分：0=无效, 1=有效, 2=无此项, 3=不详</p>
         <div class="mb-3">
             <label class="form-label">1. 感冒较以往次数减少</label>
@@ -107,10 +110,10 @@
         <input type="hidden" id="evaluation" name="evaluation">
 
         <!--五、体检单-->
-        <h5 class="mt-4 mb-3">五、体检单</h5>
+        <h5 class="mt-4 mb-3">体检单</h5>
         <div class="mb-3">
-            <label class="form-label">5.1 上传体检报告</label>
-            <input class="form-control" type="file" id="picFile" name="picFile" accept="image/*" required>
+            <label class="form-label">上传体检报告</label>
+            <input class="form-control" type="file" id="picFile" name="picFile" accept="image/*">
             <input type="hidden" id="picUrl" name="picUrl">
             <div id="preview" class="mt-3"></div>
         </div>
@@ -122,6 +125,13 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     const token = localStorage.getItem('Authorization');
+
+    // 动态生成年份（1980~今年）
+    const yearSelect = document.getElementById('propolisYear');
+    const currentYear = new Date().getFullYear();
+    for (let y = currentYear; y >= 1980; y--) {
+        yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+    }
 
     // 动态显示/隐藏病程和服药
     document.querySelectorAll('.conditional-select').forEach(select => {
@@ -176,6 +186,12 @@
         const evalItems = document.querySelectorAll('.evaluation-item');
         const evalValues = [];
         let hasEmpty = false;
+
+        // // 若未上传图片，确保picUrl为空字符串
+        // if (!$('#picUrl').val()) {
+        //     $('#picUrl').val('');
+        // }
+
         evalItems.forEach(select => {
             if (!select.value) hasEmpty = true;
             evalValues.push(select.value);
@@ -194,7 +210,6 @@
             data[key] = value;
         });
 
-        console.log("hahhahhah");
         console.log(data);
 
         fetch('/user/all/saveQuestionnaires', {
@@ -208,8 +223,11 @@
             .then(response => response.json())
             .then(result => {
                 if (result.code === 1) {
-                    alert("提交成功，正在跳转登录界面");
-                    window.location.href = "/static/login.html";
+                    alert("提交成功，谢谢");
+                    // window.location.href = "/static/login.html";
+                    this.reset();
+                    $('#preview').empty();
+                    $('#propolisDetails').hide();
                 } else {
                     alert("提交失败：" + result.msg);
                 }
