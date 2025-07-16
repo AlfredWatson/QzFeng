@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>后台管理系统</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body class="flex h-screen bg-gray-100">
+<body class="flex h-screen bg-gray-50">
 
 <!-- 左侧侧边栏 -->
 <aside class="w-64 bg-gray-800 text-white flex flex-col">
@@ -18,14 +18,16 @@
     </nav>
 </aside>
 
-<!-- 右侧内容区域 -->
-<main class="flex-1 p-6 overflow-y-auto">
-    <!-- 欢迎标语 -->
+<!-- 主内容区域 -->
+<main class="flex-1 p-6 overflow-y-auto relative">
+    <!-- 欢迎页面 -->
     <div id="homePage" class="text-3xl font-semibold">欢迎来到后台管理系统</div>
 
-    <!-- 用户列表 -->
+    <!-- 用户列表页面 -->
     <div id="userListPage" class="hidden">
         <h1 class="text-2xl font-bold mb-4">用户列表</h1>
+
+        <!-- 分页控制 -->
         <div class="mb-4 flex items-center space-x-4">
             <label>每页显示：
                 <select id="pageSizeSelect" class="border rounded px-2 py-1">
@@ -40,7 +42,25 @@
             </label>
             <button id="goPageBtn" class="bg-blue-500 text-white px-3 py-1 rounded">Go</button>
         </div>
-        <div id="userList" class="space-y-2"></div>
+
+        <!-- 用户数据表格 -->
+        <div class="overflow-x-auto bg-white shadow rounded">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 text-left">ID</th>
+                    <th class="px-4 py-2 text-left">姓名</th>
+                    <th class="px-4 py-2 text-left">电话</th>
+<!--                    <th class="px-4 py-2 text-left">生日</th>-->
+<!--                    <th class="px-4 py-2 text-left">性别</th>-->
+                    <th class="px-4 py-2 text-left">操作</th>
+                </tr>
+                </thead>
+                <tbody id="userTableBody" class="divide-y divide-gray-200"></tbody>
+            </table>
+        </div>
+
+        <!-- 分页按钮 -->
         <div class="mt-4 flex justify-between items-center">
             <button id="prevPageBtn" class="bg-gray-500 text-white px-3 py-1 rounded">上一页</button>
             <span id="pageInfo" class="text-gray-700"></span>
@@ -49,9 +69,15 @@
     </div>
 </main>
 
-<!-- 用户详细信息面板 -->
-<aside id="detailPanel" class="w-96 bg-white shadow-lg border-l border-gray-300 p-4 fixed right-0 top-0 h-full hidden overflow-y-auto">
-    <div id="userDetails"></div>
+<!-- 右侧问卷信息抽屉 -->
+<aside id="questionnaireDrawer" class="fixed top-0 right-0 w-1/3 h-full bg-white shadow-lg transform translate-x-full transition-transform duration-300 overflow-y-auto">
+    <div class="p-4 border-b flex justify-between items-center">
+        <h2 class="text-xl font-bold">问卷信息</h2>
+        <button id="closeDrawerBtn" class="text-gray-500 hover:text-gray-800">&times;</button>
+    </div>
+    <div id="questionnaireContent" class="p-4 space-y-4">
+        <!-- 三块内容分别放这里 -->
+    </div>
 </aside>
 
 <script>
@@ -59,29 +85,24 @@
     const usersBtn = document.getElementById("usersBtn");
     const homePage = document.getElementById("homePage");
     const userListPage = document.getElementById("userListPage");
-    const userList = document.getElementById("userList");
-    const detailPanel = document.getElementById("detailPanel");
-    const userDetails = document.getElementById("userDetails");
+    const questionnaireDrawer = document.getElementById("questionnaireDrawer");
+    const questionnaireContent = document.getElementById("questionnaireContent");
+    let currentPage = 1, pageSize = 5, totalPages = 1;
 
-    let currentPage = 1;
-    let pageSize = 5;
-    let totalPages = 1;
-
-    // 切换主页和用户列表
+    // 页面切换
     homeBtn.onclick = () => {
         homePage.classList.remove("hidden");
         userListPage.classList.add("hidden");
-        detailPanel.classList.add("hidden");
+        closeDrawer();
     };
     usersBtn.onclick = () => {
         homePage.classList.add("hidden");
         userListPage.classList.remove("hidden");
-        detailPanel.classList.add("hidden");
         loadUserList();
     };
 
-    // 分页逻辑
-    document.getElementById("pageSizeSelect").onchange = (e) => {
+    // 分页控制
+    document.getElementById("pageSizeSelect").onchange = e => {
         pageSize = parseInt(e.target.value);
         currentPage = 1;
         loadUserList();
@@ -91,40 +112,29 @@
         loadUserList();
     };
     document.getElementById("prevPageBtn").onclick = () => {
-        if (currentPage > 1) {
-            currentPage--;
-            loadUserList();
-        }
+        if (currentPage > 1) { currentPage--; loadUserList(); }
     };
     document.getElementById("nextPageBtn").onclick = () => {
-        if (currentPage < totalPages) {
-            currentPage++;
-            loadUserList();
-        }
+        if (currentPage < totalPages) { currentPage++; loadUserList(); }
     };
 
-    // 加载用户列表
     function loadUserList() {
         axios.get(`/admin/userList?pageNum=${currentPage}&pageSize=${pageSize}`)
-            .then(res => {
-                const data = res.data.data;
-                const users = data.records;
-                console.log(data)
-                console.log(users)
-                totalPages = Math.ceil(data.total / pageSize);
-                console.log(totalPages)
+            .then(response => {
+                const users = response.data.data.records;
+                // console.log(users);
+                totalPages = Math.ceil(response.data.data.total / pageSize);
                 document.getElementById("pageInfo").textContent = `第 ${currentPage} 页 / 共 ${totalPages} 页`;
-                userList.innerHTML = users.map(user => `
-                        <div class="flex justify-between items-center bg-white p-4 shadow rounded">
-                            <div>
-                                <p><strong>Phone:</strong> ${user.phone}</p>
-                                <p><strong>Name:</strong> ${user.name}</p>
-                            </div>
-                            <div class="flex space-x-2">
-                                <button onclick="showHealthInfo(${user.id})" class="bg-green-500 text-white px-2 py-1 rounded">健康信息</button>
-                                <button onclick="showQuestionnaire(${user.id})" class="bg-blue-500 text-white px-2 py-1 rounded">问卷信息</button>
-                            </div>
-                        </div>
+                const tbody = document.getElementById("userTableBody");
+                tbody.innerHTML = users.map(u => `
+                        <tr>
+                            <td class="px-4 py-2">${u.id}</td>
+                            <td class="px-4 py-2">${u.name}</td>
+                            <td class="px-4 py-2">${u.phone}</td>
+                            <td class="px-4 py-2">
+                                <button onclick="showQuestionnaire(${u.id})" class="bg-blue-500 text-white px-2 py-1 rounded">查看问卷</button>
+                            </td>
+                        </tr>
                     `).join("");
             })
             .catch(err => {
@@ -133,52 +143,77 @@
             });
     }
 
-    // 显示用户健康信息
-    window.showHealthInfo = function (userId) {
-        axios.get(`/admin/getUserInfoHealthById/${userId}`)
-            .then(res => {
-                const u = res.data.data;
-                userDetails.innerHTML = `
-                        <h2 class="text-xl font-bold mb-2">用户健康信息</h2>
-                        <p><strong>姓名:</strong> ${u.name}</p>
-                        <p><strong>电话:</strong> ${u.phone}</p>
-                        <p><strong>身份证:</strong> ${u.chinaId}</p>
-                        <p><strong>生日:</strong> ${u.birthday}</p>
-                        <p><strong>性别:</strong> ${u.sex === 1 ? "男" : "女"}</p>
-                        <p><strong>高血压:</strong> ${u.hypertension ? "是" : "否"}</p>
-                        <p><strong>糖尿病:</strong> ${u.diabetes ? "是" : "否"}</p>
-                        <p><strong>高血脂:</strong> ${u.hyperlipidemia ? "是" : "否"}</p>
-                        <p><strong>肿瘤:</strong> ${u.tumor ? "是" : "否"}</p>
-                    `;
-                detailPanel.classList.remove("hidden");
-            })
-            .catch(err => {
-                console.error(err);
-                alert("加载用户健康信息失败");
-            });
-    };
-
-    // 显示用户问卷信息
-    window.showQuestionnaire = function (userId) {
+    // 打开问卷抽屉
+    function showQuestionnaire(userId) {
         axios.get(`/admin/getUserQuestionnaireById/${userId}`)
-            .then(res => {
-                const q = res.data.data;
-                userDetails.innerHTML = `
-                        <h2 class="text-xl font-bold mb-2">用户问卷信息</h2>
-                        <h3 class="font-semibold">蜂胶使用情况</h3>
-                        <pre>${JSON.stringify(q.userPropolisList, null, 2)}</pre>
-                        <h3 class="font-semibold">主观评价</h3>
-                        <pre>${JSON.stringify(q.userEvalListerEval, null, 2)}</pre>
-                        <h3 class="font-semibold">体检问卷</h3>
-                        <pre>${JSON.stringify(q.userCheckupFormList, null, 2)}</pre>
+            .then(response => {
+                const q = response.data.data;
+                questionnaireContent.innerHTML = `
+                        <h3 class="font-bold text-lg">蜂胶使用情况</h3>
+                        <table class="min-w-full border mb-4">
+                            <thead><tr>
+                                <th class="border px-2 py-1">ID</th>
+                                <th class="border px-2 py-1">是否服用</th>
+                                <th class="border px-2 py-1">服用年份</th>
+                                <th class="border px-2 py-1">频率</th>
+                                <th class="border px-2 py-1">更新时间</th>
+                            </tr></thead>
+                            <tbody>${q.userPropolisList.map(p => `
+                                <tr>
+                                    <td class="border px-2 py-1">${p.id}</td>
+                                    <td class="border px-2 py-1">${p.propolis ? '是' : '否'}</td>
+                                    <td class="border px-2 py-1">${p.propolisYear}</td>
+                                    <td class="border px-2 py-1">${p.propolisFrequency}</td>
+                                    <td class="border px-2 py-1">${p.updateTime}</td>
+                                </tr>`).join('')}
+                            </tbody>
+                        </table>
+
+                        <h3 class="font-bold text-lg">主观评价</h3>
+                        <table class="min-w-full border mb-4">
+                            <thead><tr>
+                                <th class="border px-2 py-1">ID</th>
+                                <th class="border px-2 py-1">评分</th>
+                                <th class="border px-2 py-1">更新时间</th>
+                            </tr></thead>
+                            <tbody>${q.userEvalList.map(e => `
+                                <tr>
+                                    <td class="border px-2 py-1">${e.id}</td>
+                                    <td class="border px-2 py-1">${e.evaluation}</td>
+                                    <td class="border px-2 py-1">${e.updateTime}</td>
+                                </tr>`).join('')}
+                            </tbody>
+                        </table>
+
+                        <h3 class="font-bold text-lg">体检单</h3>
+                        <table class="min-w-full border">
+                            <thead><tr>
+                                <th class="border px-2 py-1">ID</th>
+                                <th class="border px-2 py-1">图片</th>
+                                <th class="border px-2 py-1">更新时间</th>
+                            </tr></thead>
+                            <tbody>${q.userCheckupFormList.map(f => `
+                                <tr>
+                                    <td class="border px-2 py-1">${f.id}</td>
+                                    <td class="border px-2 py-1"><a href="${f.picUrl}" target="_blank" class="text-blue-500">查看图片</a></td>
+                                    <td class="border px-2 py-1">${f.updateTime}</td>
+                                </tr>`).join('')}
+                            </tbody>
+                        </table>
                     `;
-                detailPanel.classList.remove("hidden");
+                questionnaireDrawer.classList.remove("translate-x-full");
             })
             .catch(err => {
                 console.error(err);
-                alert("加载用户问卷信息失败");
+                alert("加载问卷数据失败");
             });
-    };
+    }
+
+    // 关闭抽屉
+    function closeDrawer() {
+        questionnaireDrawer.classList.add("translate-x-full");
+    }
+    document.getElementById("closeDrawerBtn").onclick = closeDrawer;
 </script>
 </body>
 </html>

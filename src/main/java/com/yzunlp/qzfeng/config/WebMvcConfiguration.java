@@ -37,7 +37,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-        registry.addResourceHandler("/images").addResourceLocations("file:D:/Code/QzFeng/src/main/resources/uploads/");
+        registry.addResourceHandler("/images/**").addResourceLocations("file:/data/uploads/");
 //        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
     }
 
