@@ -195,7 +195,10 @@
                             <tbody>${q.userCheckupFormList.map(f => `
                                 <tr>
                                     <td class="border px-2 py-1">${f.id}</td>
-                                    <td class="border px-2 py-1"><a href="${f.picUrl}" target="_blank" class="text-blue-500">查看图片</a></td>
+                                    <td class="border px-2 py-1">
+<!--                                    <a href="http://49.232.199.229:18080/images/${f.picUrl}" target="_blank" class="text-blue-500">查看图片</a>-->
+                                    <img src="http://49.232.199.229:18080/images/${f.picUrl}"></img>
+                                    </td>
                                     <td class="border px-2 py-1">${f.updateTime}</td>
                                 </tr>`).join('')}
                             </tbody>
