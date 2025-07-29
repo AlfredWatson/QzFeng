@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 public class UserQuestionnaireVO {
     private List<UserPropolis> userPropolisList;
-    private List<UserEval> userEvalListerEval;
+    private List<UserEval> userEvalList;
     private List<UserCheckupForm> userCheckupFormList;
 
     public UserQuestionnaireVO() {
@@ -26,7 +26,7 @@ public class UserQuestionnaireVO {
             List<UserCheckupForm> userCheckupFormList
     ) {
         this.userPropolisList = userPropolisList;
-        this.userEvalListerEval = userEvalListerEval;
+        this.userEvalList = userEvalListerEval;
         this.userCheckupFormList = userCheckupFormList;
     }
 }

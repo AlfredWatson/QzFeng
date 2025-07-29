@@ -3,19 +3,14 @@ package com.yzunlp.qzfeng.service.Impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.yzunlp.qzfeng.common.PageResult;
-import com.yzunlp.qzfeng.domain.po.UserInfo;
 import com.yzunlp.qzfeng.domain.vo.UserInfoBaseVO;
 import com.yzunlp.qzfeng.domain.vo.UserInfoHealthVO;
 import com.yzunlp.qzfeng.domain.vo.UserQuestionnaireVO;
 import com.yzunlp.qzfeng.mapper.AdminMapper;
-import com.yzunlp.qzfeng.mapper.UserInfoMapper;
 import com.yzunlp.qzfeng.service.AdminService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +38,7 @@ public class AdminServiceImpl implements AdminService {
     public UserQuestionnaireVO selectUserQuestionnaireById(Long id) {
         UserQuestionnaireVO vo = new UserQuestionnaireVO();
         vo.setUserPropolisList(adminMapper.selectUserPropolisByUserId(id));
-        vo.setUserEvalListerEval(adminMapper.selectUserEvalByUserId(id));
+        vo.setUserEvalList(adminMapper.selectUserEvalByUserId(id));
         vo.setUserCheckupFormList(adminMapper.selectUserCheckupFormByUserId(id));
         return vo;
     }

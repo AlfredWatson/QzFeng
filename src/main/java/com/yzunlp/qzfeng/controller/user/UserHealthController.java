@@ -2,12 +2,16 @@ package com.yzunlp.qzfeng.controller.user;
 
 import com.yzunlp.qzfeng.common.Result;
 import com.yzunlp.qzfeng.domain.po.UserHealth;
+import com.yzunlp.qzfeng.domain.vo.YearPeopleVO;
+import com.yzunlp.qzfeng.domain.vo.YesNoVO;
 import com.yzunlp.qzfeng.service.UserHealthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author 10297
@@ -35,10 +39,49 @@ public class UserHealthController {
     }
 
     @Operation(summary = "根据id查找用户健康信息")
-    @GetMapping
-    public Result<UserHealth> getUserHealth() {
+    @GetMapping("/{id}")
+    public Result<UserHealth> getUserHealth(@PathVariable("id") Long id) {
         log.info("根据id查找用户健康信息");
-        UserHealth userHealth = userHealthService.selectUserHealth(0L);
+        UserHealth userHealth = userHealthService.getUserHealthById(id);
         return Result.success(userHealth);
+    }
+
+    @Operation(summary = "统计用户健康信息(有病吗？)")
+    @GetMapping("/admin/{disease}/yes-no")
+    public Result<YesNoVO> hypertension(@PathVariable("disease") String disease) {
+        log.info("统计用户健康信息({})", disease);
+
+        // todo
+
+        YesNoVO yesNoVO = new YesNoVO();
+        yesNoVO.setYes(12);
+        yesNoVO.setNo(5);
+        return Result.success(yesNoVO);
+    }
+
+    @Operation(summary = "统计用户健康信息(病了几年？)")
+    @GetMapping("/admin/{disease}/year")
+    public Result<YearPeopleVO> hypertensionYear(@PathVariable("disease") String disease) {
+        log.info("统计用户健康信息({}-year)", disease);
+
+        // todo
+
+        YearPeopleVO r = new YearPeopleVO();
+        r.setYear(List.of(2, 4, 5, 7, 12, 14, 15, 16));
+        r.setPeople(List.of(21, 13, 25, 3, 67, 82, 38, 8));
+        return Result.success(r);
+    }
+
+    @Operation(summary = "统计用户健康信息(喝了几年药？)")
+    @GetMapping("/admin/{disease}/drug")
+    public Result<YesNoVO> hypertensionDrug(@PathVariable("disease") String disease) {
+        log.info("统计用户健康信息({}-drug)", disease);
+
+        // todo
+
+        YesNoVO yesNoVO = new YesNoVO();
+        yesNoVO.setYes(23);
+        yesNoVO.setNo(65);
+        return Result.success(yesNoVO);
     }
 }

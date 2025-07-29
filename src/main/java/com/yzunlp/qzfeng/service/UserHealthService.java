@@ -10,6 +10,6 @@ public interface UserHealthService {
 
     void saveUserHealth(UserHealth userHealth);
 
-    UserHealth selectUserHealth(Long userId);
+    UserHealth getUserHealthById(Long userId);
 
 }

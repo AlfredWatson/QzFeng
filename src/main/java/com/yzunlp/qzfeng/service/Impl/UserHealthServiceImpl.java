@@ -85,7 +85,7 @@ public class UserHealthServiceImpl implements UserHealthService {
     }
 
     @Override
-    public UserHealth selectUserHealth(Long userId) {
+    public UserHealth getUserHealthById(Long userId) {
         if (userId == null || userId <= 0) {
             userId = BaseContext.getCurrentId();
         }
