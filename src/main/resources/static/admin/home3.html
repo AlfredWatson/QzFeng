@@ -60,7 +60,7 @@
                     <el-button @click="showChart('yesno', 'pie', 'hypertension')">查看饼状图</el-button>
                     <el-button @click="showChart('yesno', 'bar', 'hypertension')">查看柱状图</el-button>
                 </el-button-group>
-                <div id="yesno-chart" class="chart-container"></div>
+                <div id="hypertension-yesno-chart" class="chart-container"></div>
 
                 <!-- 1.2 病程 -->
                 <h3>1.2 在患有高血压的人中，病程统计</h3>
@@ -68,7 +68,7 @@
                     <el-button @click="showChart('year', 'pie', 'hypertension')">查看饼状图</el-button>
                     <el-button @click="showChart('year', 'bar', 'hypertension')">查看柱状图</el-button>
                 </el-button-group>
-                <div id="year-chart" class="chart-container"></div>
+                <div id="hypertension-year-chart" class="chart-container"></div>
 
                 <!-- 1.3 服药情况 -->
                 <h3>1.3 在患有高血压的人中，是否长期规律服用药物</h3>
@@ -76,8 +76,68 @@
                     <el-button @click="showChart('drug', 'pie', 'hypertension')">查看饼状图</el-button>
                     <el-button @click="showChart('drug', 'bar', 'hypertension')">查看柱状图</el-button>
                 </el-button-group>
-                <div id="drug-chart" class="chart-container"></div>
+                <div id="hypertension-drug-chart" class="chart-container"></div>
 
+
+                <!-- 1.1 糖尿病占比 -->
+                <h3>2.1 用户患有糖尿病情况</h3>
+                <p>{{ diabetesRate.yes }}% 有，{{ diabetesRate.no }}% 没有</p>
+                <el-button-group>
+                    <el-button @click="showChart('yesno', 'pie', 'diabetes')">查看饼状图</el-button>
+                    <el-button @click="showChart('yesno', 'bar', 'diabetes')">查看柱状图</el-button>
+                </el-button-group>
+                <div id="diabetes-yesno-chart" class="chart-container"></div>
+
+                <!-- 1.2 病程 -->
+                <h3>2.2 在患有糖尿病的人中，病程统计</h3>
+                <el-button-group>
+                    <el-button @click="showChart('year', 'pie', 'diabetes')">查看饼状图</el-button>
+                    <el-button @click="showChart('year', 'bar', 'diabetes')">查看柱状图</el-button>
+                </el-button-group>
+                <div id="diabetes-year-chart" class="chart-container"></div>
+
+                <!-- 1.3 服药情况 -->
+                <h3>2.3 在患有糖尿病的人中，是否长期规律服用药物</h3>
+                <el-button-group>
+                    <el-button @click="showChart('drug', 'pie', 'diabetes')">查看饼状图</el-button>
+                    <el-button @click="showChart('drug', 'bar', 'diabetes')">查看柱状图</el-button>
+                </el-button-group>
+                <div id="diabetes-drug-chart" class="chart-container"></div>
+
+
+                <!-- 1.1 高血脂占比 -->
+                <h3>3.1 用户患有高血脂情况</h3>
+                <p>{{ hyperlipidemiaRate.yes }}% 有，{{ hyperlipidemiaRate.no }}% 没有</p>
+                <el-button-group>
+                    <el-button @click="showChart('yesno', 'pie', 'hyperlipidemia')">查看饼状图</el-button>
+                    <el-button @click="showChart('yesno', 'bar', 'hyperlipidemia')">查看柱状图</el-button>
+                </el-button-group>
+                <div id="hyperlipidemia-yesno-chart" class="chart-container"></div>
+
+                <!-- 1.2 病程 -->
+                <h3>3.2 在患有高血脂的人中，病程统计</h3>
+                <el-button-group>
+                    <el-button @click="showChart('year', 'pie', 'hyperlipidemia')">查看饼状图</el-button>
+                    <el-button @click="showChart('year', 'bar', 'hyperlipidemia')">查看柱状图</el-button>
+                </el-button-group>
+                <div id="hyperlipidemia-year-chart" class="chart-container"></div>
+
+                <!-- 1.3 服药情况 -->
+                <h3>3.3 在患有高血脂的人中，是否长期规律服用药物</h3>
+                <el-button-group>
+                    <el-button @click="showChart('drug', 'pie', 'hyperlipidemia')">查看饼状图</el-button>
+                    <el-button @click="showChart('drug', 'bar', 'hyperlipidemia')">查看柱状图</el-button>
+                </el-button-group>
+                <div id="hyperlipidemia-drug-chart" class="chart-container"></div>
+
+
+                <!-- 1.3 服药情况 -->
+                <h3>4.1 用户患有肿瘤情况</h3>
+                <el-button-group>
+                    <el-button @click="showChart('yesno', 'pie', 'tumor')">查看饼状图</el-button>
+                    <el-button @click="showChart('yesno', 'bar', 'tumor')">查看柱状图</el-button>
+                </el-button-group>
+                <div id="tumor-drug-chart" class="chart-container"></div>
 
             </div>
             <div v-else>
@@ -96,6 +156,9 @@
             return {
                 currentView: '',
                 hypertensionRate: {yes: 0, no: 0},
+                diabetesRate: {yes: 0, no: 0},
+                hyperlipidemiaRate: {yes: 0, no: 0},
+                tumorRate: {yes: 0, no: 0},
                 yearData: {year: [], people: []},
                 drugData: {yes: 0, no: 0}
             }
@@ -122,8 +185,8 @@
                     // console.log(res)
                     if (res.data.code === 1) {
                         const total = res.data.data.yes + res.data.data.no;
-                        this.hypertensionRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
-                        this.hypertensionRate.no = ((res.data.data.no / total) * 100).toFixed(1);
+                        this.diabetesRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
+                        this.diabetesRate.no = ((res.data.data.no / total) * 100).toFixed(1);
                     } else {
                         console.log('获取糖尿病数据失败');
                     }
@@ -132,8 +195,8 @@
                     // console.log(res)
                     if (res.data.code === 1) {
                         const total = res.data.data.yes + res.data.data.no;
-                        this.hypertensionRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
-                        this.hypertensionRate.no = ((res.data.data.no / total) * 100).toFixed(1);
+                        this.hyperlipidemiaRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
+                        this.hyperlipidemiaRate.no = ((res.data.data.no / total) * 100).toFixed(1);
                     } else {
                         console.log('获取高血脂数据失败');
                     }
@@ -142,8 +205,8 @@
                     // console.log(res)
                     if (res.data.code === 1) {
                         const total = res.data.data.yes + res.data.data.no;
-                        this.hypertensionRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
-                        this.hypertensionRate.no = ((res.data.data.no / total) * 100).toFixed(1);
+                        this.tumorRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
+                        this.tumorRate.no = ((res.data.data.no / total) * 100).toFixed(1);
                     } else {
                         console.log('获取肿瘤数据失败');
                     }
@@ -153,7 +216,7 @@
                 let endpoint = ''
                 let chartId = ''
                 if (type === 'yesno') {
-                    chartId = 'yesno-chart';
+                    chartId = disease + '-yesno-chart';
                     axios.get('/user/health/admin/' + disease + '/yes-no').then(res => {
                         if (res.data.code === 1) {
                             const {yes, no} = res.data.data;
@@ -161,7 +224,7 @@
                         }
                     });
                 } else if (type === 'year') {
-                    chartId = 'year-chart';
+                    chartId = disease + 'year-chart';
                     axios.get('/user/health/admin/' + disease + '/year').then(res => {
                         if (res.data.code === 1) {
                             const {year, people} = res.data.data;
@@ -169,7 +232,7 @@
                         }
                     });
                 } else if (type === 'drug') {
-                    chartId = 'drug-chart';
+                    chartId = disease + 'drug-chart';
                     axios.get('/user/health/admin/' + disease + '/drug').then(res => {
                         if (res.data.code === 1) {
                             const {yes, no} = res.data.data;
