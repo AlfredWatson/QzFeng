@@ -1,7 +1,11 @@
 package com.yzunlp.qzfeng.mapper;
 
+import com.yzunlp.qzfeng.domain.dto.EvaluationCountDTO;
 import com.yzunlp.qzfeng.domain.po.UserEval;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @author 10297
@@ -30,4 +34,6 @@ public interface UserEvalMapper {
      * @return 用户主观评价
      */
     UserEval selectUserEval(Long userId);
+    // 根据问题索引(eid)统计分数分布
+    List<EvaluationCountDTO> countScoresByEvaluationIndex(@Param("eid") Integer eid);
 }

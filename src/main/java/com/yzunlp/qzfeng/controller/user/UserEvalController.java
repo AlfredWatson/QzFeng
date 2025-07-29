@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -58,12 +59,17 @@ public class UserEvalController {
     @Operation(summary = "admin:查询用户主观体验")
     @GetMapping("/admin/{eid}")
     public Result<Map<Integer, Integer>> queryScoresByEid(@PathVariable("eid") Integer eid) {
-        log.debug("admin:查询用户主观体验(eid={})", eid);
-        // todo Map的 K 只能为 0，1，2
-        Map<Integer, Integer> r = Map.of(
-                0, 22,
-                1, 5,
-                2, 13);
-        return Result.success(r);
+//        log.debug("admin:查询用户主观体验(eid={})", eid);
+//        // todo Map的 K 只能为 0，1，2
+//        Map<Integer, Integer> r = Map.of(
+//                0, 22,
+//                1, 5,
+//                2, 13);
+//        return Result.success(r);
+        if (eid == null || eid < 0 || eid > 5) {
+            return Result.success(Collections.emptyMap());
+        }
+        return Result.success(userEvalService.countScoresByEvaluationIndex(eid));
     }
+
 }

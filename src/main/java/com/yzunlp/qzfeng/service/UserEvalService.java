@@ -1,6 +1,9 @@
 package com.yzunlp.qzfeng.service;
 
+import com.yzunlp.qzfeng.common.Result;
 import com.yzunlp.qzfeng.domain.po.UserEval;
+
+import java.util.Map;
 
 /**
  * @author 10297
@@ -28,4 +31,6 @@ public interface UserEvalService {
      * @return 用户主观评价
      */
     UserEval getByUserId(Long userId);
+
+    Map<Integer, Integer> countScoresByEvaluationIndex(Integer eid);
 }
