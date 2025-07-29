@@ -22,7 +22,7 @@ public class UserEvalServiceImpl implements UserEvalService {
     private UserEvalMapper userEvalMapper;
 
     @Override
-    public void add(UserEval userEval) {
+    public void save(UserEval userEval) {
         userEval.setUserId(BaseContext.getCurrentId());
         if (userEval.getUpdateTime() == null) {
             userEval.setUpdateTime(LocalDateTime.now());

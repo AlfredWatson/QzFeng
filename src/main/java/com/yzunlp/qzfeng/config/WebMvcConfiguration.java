@@ -32,7 +32,8 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .excludePathPatterns("/user/info/login")
                 .excludePathPatterns("/user/info/register")
                 .excludePathPatterns("/user/health/admin/**")
-                .excludePathPatterns("/user/propolis/admin/**");
+                .excludePathPatterns("/user/propolis/admin/**")
+                .excludePathPatterns("/user/eval/admin/**");
     }
 
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {

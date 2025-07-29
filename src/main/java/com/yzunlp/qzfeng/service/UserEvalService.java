@@ -12,7 +12,7 @@ public interface UserEvalService {
      *
      * @param userEval 用户主观评价
      */
-    void add(UserEval userEval);
+    void save(UserEval userEval);
 
     /**
      * 更新用户主观评价

@@ -5,11 +5,8 @@ import com.yzunlp.qzfeng.domain.dto.UserHome1stDTO;
 import com.yzunlp.qzfeng.domain.dto.UserHomeDTO;
 import com.yzunlp.qzfeng.domain.dto.UserInfoDTO;
 import com.yzunlp.qzfeng.domain.po.*;
-import com.yzunlp.qzfeng.mapper.UserEvalMapper;
-import com.yzunlp.qzfeng.mapper.UserHealthMapper;
 import com.yzunlp.qzfeng.mapper.UserInfoMapper;
 import com.yzunlp.qzfeng.service.*;
-import org.apache.catalina.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,7 +78,7 @@ public class UserServiceImpl implements UserService {
         //更新user_eval
         UserEval userEval = new UserEval();
         userEval.setEvaluation(userHome1stDTO.getEvaluation());
-        userEvalService.add(userEval);
+        userEvalService.save(userEval);
 
         //更新user_propolis
         UserPropolis userPropolis = new UserPropolis();
@@ -103,7 +100,7 @@ public class UserServiceImpl implements UserService {
         //更新user_eval
         UserEval userEval = new UserEval();
         userEval.setEvaluation(userHomeDTO.getEvaluation());
-        userEvalService.add(userEval);
+        userEvalService.save(userEval);
 
         //更新user_propolis
         UserPropolis userPropolis = new UserPropolis();
