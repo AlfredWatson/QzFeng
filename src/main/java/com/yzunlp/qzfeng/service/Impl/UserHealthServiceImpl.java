@@ -126,14 +126,6 @@ public class UserHealthServiceImpl implements UserHealthService {
 
     @Override
     public Result<YesNoVO> hypertensionDrug(String disease) {
-        // todo
         return Result.success(userHealthMapper.searchDrugYesOrNo(disease));
-
-
-
-//        YesNoVO yesNoVO = new YesNoVO();
-//        yesNoVO.setYes(23);
-//        yesNoVO.setNo(65);
-//        return Result.success(yesNoVO);
     }
 }

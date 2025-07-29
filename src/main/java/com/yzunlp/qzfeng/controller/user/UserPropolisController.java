@@ -62,36 +62,20 @@ public class UserPropolisController {
     @GetMapping("/admin/yes-no")
     public Result<YesNoVO> propolis() {
         log.debug("统计用户使用蜂胶信息(吃过吗？)");
-
-        // Todo
-
-        YesNoVO yesNoVO = new YesNoVO();
-        yesNoVO.setYes(2);
-        yesNoVO.setNo(58);
-        return Result.success(yesNoVO);
+        return Result.success(userPropolisService.propolisYesOrNo());
     }
 
     @Operation(summary = "统计用户使用蜂胶信息(从什么时候开始吃的？)")
     @GetMapping("/admin/year")
     public Result<YearPeopleVO> propolisYear() {
         log.debug("统计用户使用蜂胶信息(从什么时候开始吃的？)");
-
-        // Todo
-
-        YearPeopleVO r = new YearPeopleVO();
-        r.setYear(List.of(2000, 2004, 2015, 2007, 2012, 2014, 2015, 2016));
-        r.setPeople(List.of(21, 13, 25, 3, 67, 82, 38, 8));
-        return Result.success(r);
+        return Result.success(userPropolisService.propolisYear());
     }
 
     @Operation(summary = "统计用户使用蜂胶信息(吃的频率？)")
     @GetMapping("/admin/frequency")
     public Result<Map<String, Integer>> propolisFrequency() {
         log.debug("统计用户使用蜂胶信息(吃的频率？)");
-
-        // Todo
-
-        Map<String, Integer> r = Map.of("A", 2, "B", 5, "C", 7, "D", 12);
-        return Result.success(r);
+        return Result.success(userPropolisService.propolisFrequency());
     }
 }
