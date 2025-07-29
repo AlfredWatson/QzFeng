@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理系统</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <script src="https://unpkg.com/element-plus"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #app {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #f4f4f4;
+        }
+
+        .main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <el-container>
+        <el-aside width="200px" class="sidebar">
+            <el-menu default-active="1" class="el-menu-vertical-demo" @select="handleMenuSelect">
+                <el-menu-item index="1">主页</el-menu-item>
+                <el-menu-item index="2">查看所有用户信息</el-menu-item>
+                <el-menu-item index="3">用户问卷信息统计分析</el-menu-item>
+            </el-menu>
+        </el-aside>
+
+        <el-main class="main">
+            <div v-if="currentView === 'analysis'">
+                <!-- 1.1 高血压占比 -->
+                <h3>1.1 用户患有高血压情况</h3>
+                <p>{{ hypertensionRate.yes }}% 有，{{ hypertensionRate.no }}% 没有</p>
+                <el-button-group>
+                    <el-button @click="showChart('yesno', 'pie', 'hypertension')">查看饼状图</el-button>
+                    <el-button @click="showChart('yesno', 'bar', 'hypertension')">查看柱状图</el-button>
+                </el-button-group>
+                <div id="yesno-chart" class="chart-container"></div>
+
+                <!-- 1.2 病程 -->
+                <h3>1.2 在患有高血压的人中，病程统计</h3>
+                <el-button-group>
+                    <el-button @click="showChart('year', 'pie', 'hypertension')">查看饼状图</el-button>
+                    <el-button @click="showChart('year', 'bar', 'hypertension')">查看柱状图</el-button>
+                </el-button-group>
+                <div id="year-chart" class="chart-container"></div>
+
+                <!-- 1.3 服药情况 -->
+                <h3>1.3 在患有高血压的人中，是否长期规律服用药物</h3>
+                <el-button-group>
+                    <el-button @click="showChart('drug', 'pie', 'hypertension')">查看饼状图</el-button>
+                    <el-button @click="showChart('drug', 'bar', 'hypertension')">查看柱状图</el-button>
+                </el-button-group>
+                <div id="drug-chart" class="chart-container"></div>
+
+
+            </div>
+            <div v-else>
+                <p>请选择左侧菜单</p>
+            </div>
+        </el-main>
+    </el-container>
+</div>
+
+<script>
+    const {createApp} = Vue
+    const {ElButton, ElMenu, ElMenuItem, ElContainer, ElAside, ElMain, ElButtonGroup} = ElementPlus
+
+    createApp({
+        data() {
+            return {
+                currentView: '',
+                hypertensionRate: {yes: 0, no: 0},
+                yearData: {year: [], people: []},
+                drugData: {yes: 0, no: 0}
+            }
+        },
+        methods: {
+            handleMenuSelect(index) {
+                if (index === '3') {
+                    this.currentView = 'analysis';
+                    this.fetchHypertensionRate();
+                }
+            },
+            fetchHypertensionRate() {
+                axios.get('/user/health/admin/hypertension/yes-no').then(res => {
+                    // console.log(res)
+                    if (res.data.code === 1) {
+                        const total = res.data.data.yes + res.data.data.no;
+                        this.hypertensionRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
+                        this.hypertensionRate.no = ((res.data.data.no / total) * 100).toFixed(1);
+                    } else {
+                        console.log('获取高血压数据失败');
+                    }
+                });
+                axios.get('/user/health/admin/diabetes/yes-no').then(res => {
+                    // console.log(res)
+                    if (res.data.code === 1) {
+                        const total = res.data.data.yes + res.data.data.no;
+                        this.hypertensionRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
+                        this.hypertensionRate.no = ((res.data.data.no / total) * 100).toFixed(1);
+                    } else {
+                        console.log('获取糖尿病数据失败');
+                    }
+                });
+                axios.get('/user/health/admin/hyperlipidemia/yes-no').then(res => {
+                    // console.log(res)
+                    if (res.data.code === 1) {
+                        const total = res.data.data.yes + res.data.data.no;
+                        this.hypertensionRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
+                        this.hypertensionRate.no = ((res.data.data.no / total) * 100).toFixed(1);
+                    } else {
+                        console.log('获取高血脂数据失败');
+                    }
+                });
+                axios.get('/user/health/admin/tumor/yes-no').then(res => {
+                    // console.log(res)
+                    if (res.data.code === 1) {
+                        const total = res.data.data.yes + res.data.data.no;
+                        this.hypertensionRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
+                        this.hypertensionRate.no = ((res.data.data.no / total) * 100).toFixed(1);
+                    } else {
+                        console.log('获取肿瘤数据失败');
+                    }
+                });
+            },
+            showChart(type, chartType, disease) {
+                let endpoint = ''
+                let chartId = ''
+                if (type === 'yesno') {
+                    chartId = 'yesno-chart';
+                    axios.get('/user/health/admin/' + disease + '/yes-no').then(res => {
+                        if (res.data.code === 1) {
+                            const {yes, no} = res.data.data;
+                            this.renderChart(chartId, chartType, ['有', '无'], [yes, no]);
+                        }
+                    });
+                } else if (type === 'year') {
+                    chartId = 'year-chart';
+                    axios.get('/user/health/admin/' + disease + '/year').then(res => {
+                        if (res.data.code === 1) {
+                            const {year, people} = res.data.data;
+                            this.renderChart(chartId, chartType, year.map(y => y + '年'), people);
+                        }
+                    });
+                } else if (type === 'drug') {
+                    chartId = 'drug-chart';
+                    axios.get('/user/health/admin/' + disease + '/drug').then(res => {
+                        if (res.data.code === 1) {
+                            const {yes, no} = res.data.data;
+                            this.renderChart(chartId, chartType, ['是', '否'], [yes, no]);
+                        }
+                    });
+                }
+            },
+            renderChart(containerId, chartType, labels, values) {
+                const chart = echarts.init(document.getElementById(containerId));
+                let option = {};
+                if (chartType === 'pie') {
+                    option = {
+                        tooltip: {trigger: 'item'},
+                        series: [{
+                            type: 'pie',
+                            radius: '50%',
+                            data: labels.map((label, index) => ({name: label, value: values[index]})),
+                        }]
+                    };
+                } else if (chartType === 'bar') {
+                    option = {
+                        xAxis: {type: 'category', data: labels},
+                        yAxis: {type: 'value'},
+                        series: [{
+                            data: values,
+                            type: 'bar'
+                        }]
+                    };
+                }
+                chart.setOption(option);
+            }
+        }
+    }).use(ElementPlus).mount('#app');
+</script>
+</body>
+
+</html>

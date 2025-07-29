@@ -4,7 +4,7 @@ spring:
   application:
     name: yzunlp-qzfeng-service
   profiles:
-    active: test
+    active: dev
   servlet:
     multipart:
       max-file-size: 10MB     # 单个文件最大10MB
@@ -14,6 +14,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${yzu-nlp.database.username}
     password: ${yzu-nlp.database.password}
+
 
 mybatis:
   #mapper配置文件
