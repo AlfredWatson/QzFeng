@@ -1,6 +1,10 @@
 package com.yzunlp.qzfeng.service;
 
 import com.yzunlp.qzfeng.domain.po.UserPropolis;
+import com.yzunlp.qzfeng.domain.vo.YearPeopleVO;
+import com.yzunlp.qzfeng.domain.vo.YesNoVO;
+
+import java.util.Map;
 
 /**
  * @author 10297
@@ -28,4 +32,10 @@ public interface UserPropolisService {
      * @return 用户蜂胶信息
      */
     UserPropolis getByUserId(Long userId);
+
+    YesNoVO propolisYesOrNo();
+
+    YearPeopleVO propolisYear();
+
+    Map<String, Integer> propolisFrequency();
 }

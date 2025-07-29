@@ -1,7 +1,12 @@
 package com.yzunlp.qzfeng.mapper;
 
+import com.yzunlp.qzfeng.domain.dto.FrequencyCountDTO;
+import com.yzunlp.qzfeng.domain.dto.YearCountDTO;
 import com.yzunlp.qzfeng.domain.po.UserPropolis;
+import com.yzunlp.qzfeng.domain.vo.YesNoVO;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * @author 10297
@@ -30,4 +35,10 @@ public interface UserPropolisMapper {
      * @return 用户蜂胶信息
      */
     UserPropolis selectUserPropolis(Long userId);
+
+    YesNoVO propolisYesOrNo();
+
+    List<YearCountDTO> countPropolisByYear();
+
+    List<FrequencyCountDTO> countPropolisByFrequency();
 }
