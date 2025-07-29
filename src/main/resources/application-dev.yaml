@@ -6,6 +6,6 @@ yzu-nlp:
     password: admin
     schema: Questionnaire
   upload:
-    user-upload-path: D:\\develop_cocos\\
+    user-upload-path: D:\\Code\\QzFeng\\src\\main\\resources\\uploads\\
     # D:\\develop_cocos\\
     # D:\\Code\\QzFeng\\src\\main\\resources\\uploads\\

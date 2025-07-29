@@ -156,12 +156,8 @@
                     <el-button @click="showChart('yesno', 'bar', 'tumor')">查看柱状图</el-button>
                 </el-button-group>
                 <div id="tumor-yesno-chart" class="chart-container"></div>
-            </div>
 
-            <div v-if="currentView === 'propolis'">
-                <h1>cococococo列表</h1>
             </div>
-
             <div v-else>
                 <p>请选择左侧菜单</p>
             </div>
@@ -280,6 +276,8 @@
                             this.renderChart(chartId, chartType, ['有', '无'], [yes, no]);
                         }
                     });
+                    // const {yes, no} = this.tumorRate;
+                    // this.renderChart(chartId, chartType, ['有', '无'], [yes, no]);
                 } else if (type === 'year') {
                     chartId = disease + '-year-chart';
                     axios.get('/user/health/admin/' + disease + '/year').then(res => {

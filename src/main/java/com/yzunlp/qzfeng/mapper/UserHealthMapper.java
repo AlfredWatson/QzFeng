@@ -1,8 +1,13 @@
 package com.yzunlp.qzfeng.mapper;
 
+import com.yzunlp.qzfeng.domain.dto.YearCountDTO;
 import com.yzunlp.qzfeng.domain.po.Info2Health;
 import com.yzunlp.qzfeng.domain.po.UserHealth;
+import com.yzunlp.qzfeng.domain.vo.YearPeopleVO;
+import com.yzunlp.qzfeng.domain.vo.YesNoVO;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * @author 10297
@@ -35,4 +40,10 @@ public interface UserHealthMapper {
     void addInfo2Health(Info2Health info2Health);
 
     Info2Health selectInfo2Health(Long userId);
+
+    YesNoVO searchYesOrNo(String disease);
+
+    List<YearCountDTO> hypertensionYear(String disease);
+
+    YesNoVO searchDrugYesOrNo(String disease);
 }

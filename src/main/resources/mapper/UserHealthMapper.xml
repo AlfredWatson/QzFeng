@@ -69,4 +69,89 @@
         FROM Questionnaire.info2health
         WHERE info_id = #{userId}
     </select>
+    <select id="searchYesOrNo" resultType="com.yzunlp.qzfeng.domain.vo.YesNoVO">
+        SELECT
+        <choose>
+            <when test="disease == 'diabetes'">
+                COUNT(CASE WHEN diabetes = 1 THEN 1 END) AS yes,
+                COUNT(CASE WHEN diabetes = 0 THEN 1 END) AS no
+            </when>
+            <when test="disease == 'hypertension'">
+                COUNT(CASE WHEN hypertension = 1 THEN 1 END) AS yes,
+                COUNT(CASE WHEN hypertension = 0 THEN 1 END) AS no
+            </when>
+            <when test="disease == 'hyperlipidemia'">
+                COUNT(CASE WHEN hyperlipidemia = 1 THEN 1 END) AS yes,
+                COUNT(CASE WHEN hyperlipidemia = 0 THEN 1 END) AS no
+            </when>
+            <when test="disease == 'tumor'">
+                COUNT(CASE WHEN tumor = 1 THEN 1 END) AS yes,
+                COUNT(CASE WHEN tumor = 0 THEN 1 END) AS no
+            </when>
+            <otherwise>
+                SELECT 0 AS yes, 0 AS no
+            </otherwise>
+        </choose>
+        FROM Questionnaire.user_health
+    </select>
+    <select id="hypertensionYear" resultType="com.yzunlp.qzfeng.domain.dto.YearCountDTO">
+        SELECT
+            CASE
+                WHEN #{disease} = 'hypertension' THEN t1.hypertension_year
+                WHEN #{disease} = 'diabetes' THEN t1.diabetes_year
+                WHEN #{disease} = 'hyperlipidemia' THEN t1.hyperlipidemia_year
+            END AS year,
+            -- 统计人数
+            COUNT(t1.id) AS people
+        FROM
+            user_health t1
+        WHERE
+            CASE
+                WHEN #{disease} = 'hypertension' THEN t1.hypertension
+                WHEN #{disease} = 'diabetes' THEN t1.diabetes
+                WHEN #{disease} = 'hyperlipidemia' THEN t1.hyperlipidemia
+                ELSE 0
+                END = 1
+          -- 并且，只统计那些年份不为NULL或0的有效记录
+          AND CASE
+                  WHEN #{disease} = 'hypertension' THEN t1.hypertension_year
+                  WHEN #{disease} = 'diabetes' THEN t1.diabetes_year
+                  WHEN #{disease} = 'hyperlipidemia' THEN t1.hyperlipidemia_year
+            END IS NOT NULL
+          AND CASE
+                  WHEN #{disease} = 'hypertension' THEN t1.hypertension_year
+                  WHEN #{disease} = 'diabetes' THEN t1.diabetes_year
+                  WHEN #{disease} = 'hyperlipidemia' THEN t1.hyperlipidemia_year
+                  END > 0
+        -- 3. 按动态选择出的年份进行分组
+        GROUP BY
+            year
+        -- 4. 按年份排序
+        ORDER BY
+            year ASC
+    </select>
+    <select id="searchDrugYesOrNo" resultType="com.yzunlp.qzfeng.domain.vo.YesNoVO">
+        SELECT
+        <choose>
+            <when test="disease == 'diabetes'">
+                <!-- 只在 diabetes = 1 的人群中，统计 diabetes_drug 的情况 -->
+                COUNT(CASE WHEN diabetes = 1 AND diabetes_drug = 1 THEN 1 END) AS yes,
+                COUNT(CASE WHEN diabetes = 1 AND diabetes_drug = 0 THEN 1 END) AS no
+            </when>
+            <when test="disease == 'hypertension'">
+                <!-- 只在 hypertension = 1 的人群中，统计 hypertension_drug 的情况 -->
+                COUNT(CASE WHEN hypertension = 1 AND hypertension_drug = 1 THEN 1 END) AS yes,
+                COUNT(CASE WHEN hypertension = 1 AND hypertension_drug = 0 THEN 1 END) AS no
+            </when>
+            <when test="disease == 'hyperlipidemia'">
+                <!-- 只在 hyperlipidemia = 1 的人群中，统计 hyperlipidemia_drug 的情况 -->
+                COUNT(CASE WHEN hyperlipidemia = 1 AND hyperlipidemia_drug = 1 THEN 1 END) AS yes,
+                COUNT(CASE WHEN hyperlipidemia = 1 AND hyperlipidemia_drug = 0 THEN 1 END) AS no
+            </when>
+            <otherwise>
+                0 AS yes, 0 AS no
+            </otherwise>
+        </choose>
+        FROM Questionnaire.user_health
+    </select>
 </mapper>
