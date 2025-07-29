@@ -43,16 +43,33 @@
 <body>
 <div id="app">
     <el-container>
-        <el-aside width="200px" class="sidebar">
+        <!--        <el-aside width="200px" class="sidebar">-->
+        <!--            <el-menu default-active="1" class="el-menu-vertical-demo" @select="handleMenuSelect">-->
+        <!--                <el-menu-item index="1">主页</el-menu-item>-->
+        <!--                <el-menu-item index="2">查看所有用户信息</el-menu-item>-->
+        <!--                <el-menu-item index="3">用户健康信息统计分析</el-menu-item>-->
+        <!--            </el-menu>-->
+        <!--        </el-aside>-->
+
+        <el-aside width="200px">
             <el-menu default-active="1" class="el-menu-vertical-demo" @select="handleMenuSelect">
-                <el-menu-item index="1">主页</el-menu-item>
-                <el-menu-item index="2">查看所有用户信息</el-menu-item>
-                <el-menu-item index="3">用户问卷信息统计分析</el-menu-item>
+                <el-menu-item index="1" @click="currentSection = 'home'">回到主页</el-menu-item>
+                <el-menu-item index="2" @click="currentSection = 'users'">查看所有用户信息</el-menu-item>
+                <el-menu-item index="3" @click="currentSection = 'health'">用户健康信息统计分析</el-menu-item>
+                <el-menu-item index="4" @click="currentSection = 'propolis'">用户填写信息统计分析</el-menu-item>
             </el-menu>
         </el-aside>
 
         <el-main class="main">
-            <div v-if="currentView === 'analysis'">
+            <div v-if="currentView === 'home'">
+                <h1>欢迎来到后台管理系统</h1>
+            </div>
+
+            <div v-if="currentView === 'users'">
+                <h1>用户列表</h1>
+            </div>
+
+            <div v-if="currentView === 'health'">
                 <!-- 1.1 高血压占比 -->
                 <h3>1.1 用户患有高血压情况</h3>
                 <p>{{ hypertensionRate.yes }}% 有，{{ hypertensionRate.no }}% 没有</p>
@@ -133,13 +150,18 @@
 
                 <!-- 1.3 服药情况 -->
                 <h3>4.1 用户患有肿瘤情况</h3>
+                <p>{{ tumorRate.yes }}% 有，{{ tumorRate.no }}% 没有</p>
                 <el-button-group>
                     <el-button @click="showChart('yesno', 'pie', 'tumor')">查看饼状图</el-button>
                     <el-button @click="showChart('yesno', 'bar', 'tumor')">查看柱状图</el-button>
                 </el-button-group>
-                <div id="tumor-drug-chart" class="chart-container"></div>
-
+                <div id="tumor-yesno-chart" class="chart-container"></div>
             </div>
+
+            <div v-if="currentView === 'propolis'">
+                <h1>cococococo列表</h1>
+            </div>
+
             <div v-else>
                 <p>请选择左侧菜单</p>
             </div>
@@ -165,12 +187,25 @@
         },
         methods: {
             handleMenuSelect(index) {
-                if (index === '3') {
-                    this.currentView = 'analysis';
-                    this.fetchHypertensionRate();
+                if (index === '1') {
+                    this.currentView = 'home';
+
+                } else if (index === '2') {
+                    this.currentView = 'users';
+
+                } else if (index === '3') {
+                    this.currentView = 'health';
+                    this.fetchHealthRate();
+
+                } else if (index === '4') {
+                    this.currentView = 'propolis';
+                    this.fetchPropolisRate();
+
+                } else {
+                    console.log('1');
                 }
             },
-            fetchHypertensionRate() {
+            fetchHealthRate() {
                 axios.get('/user/health/admin/hypertension/yes-no').then(res => {
                     // console.log(res)
                     if (res.data.code === 1) {
@@ -212,6 +247,28 @@
                     }
                 });
             },
+            fetchPropolisRate(){
+                axios.get('/user/propolis/admin/yes-no').then(res => {
+                    // console.log(res)
+                    if (res.data.code === 1) {
+                        const total = res.data.data.yes + res.data.data.no;
+                        this.hypertensionRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
+                        this.hypertensionRate.no = ((res.data.data.no / total) * 100).toFixed(1);
+                    } else {
+                        console.log('获取高血压数据失败');
+                    }
+                });
+                axios.get('/user/propolis/admin/frequency').then(res => {
+                    // console.log(res)
+                    if (res.data.code === 1) {
+                        const total = res.data.data.yes + res.data.data.no;
+                        this.hypertensionRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
+                        this.hypertensionRate.no = ((res.data.data.no / total) * 100).toFixed(1);
+                    } else {
+                        console.log('获取高血压数据失败');
+                    }
+                });
+            },
             showChart(type, chartType, disease) {
                 let endpoint = ''
                 let chartId = ''
@@ -224,7 +281,7 @@
                         }
                     });
                 } else if (type === 'year') {
-                    chartId = disease + 'year-chart';
+                    chartId = disease + '-year-chart';
                     axios.get('/user/health/admin/' + disease + '/year').then(res => {
                         if (res.data.code === 1) {
                             const {year, people} = res.data.data;
@@ -232,7 +289,7 @@
                         }
                     });
                 } else if (type === 'drug') {
-                    chartId = disease + 'drug-chart';
+                    chartId = disease + '-drug-chart';
                     axios.get('/user/health/admin/' + disease + '/drug').then(res => {
                         if (res.data.code === 1) {
                             const {yes, no} = res.data.data;
