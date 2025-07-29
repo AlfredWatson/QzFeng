@@ -24,17 +24,17 @@ public class UserHome1stDTO {
 
     private Boolean hypertension; // 是否有高血压
     private Integer hypertensionYear; // 高血压病程几年
-    private boolean hypertensionDrug; // 是否规律服药
+    private Boolean hypertensionDrug; // 是否规律服药
     private Boolean diabetes; // 是否有糖尿病
     private Integer diabetesYear; // 糖尿病病程几年
-    private boolean diabetesDrug; // 是否规律服药
+    private Boolean diabetesDrug; // 是否规律服药
     private Boolean hyperlipidemia; // 是否有高血脂
     private Integer hyperlipidemiaYear; // 高血脂病程几年
-    private boolean hyperlipidemiaDrug; // 是否规律服药
+    private Boolean hyperlipidemiaDrug; // 是否规律服药
     private Boolean tumor; // 是否有肿瘤
 
     private Boolean propolis; // 是否服用过蜂胶
-    private Short propolisYear; // 从何时开始使用蜂胶
+    private Integer propolisYear; // 从何时开始使用蜂胶
     private String propolisFrequency; // 蜂胶使用频率(单选: ABCD)
 
     private String evaluation; // 使用逗号分割，共六个评分(评分范围[0, 3])

@@ -28,7 +28,6 @@ public class UserController {
     @PostMapping("/saveAll")
     public Result<Void> saveAll(@RequestBody UserHome1stDTO userHome1stDTO) {
         log.info("用户第一次: {}", userHome1stDTO);
-        // todo 保存 userHome1stDTO
         userService.saveAll(userHome1stDTO);
         return Result.success();
     }
@@ -37,7 +36,6 @@ public class UserController {
     @PostMapping("/saveQuestionnaires")
     public Result<Void> saveQuestionnaires(@RequestBody UserHomeDTO userHomeDTO) {
         log.info("用户后续: {}", userHomeDTO);
-        // todo 保存 userHomeDTO
         userService.saveQuestionnaires(userHomeDTO);
         return Result.success();
     }

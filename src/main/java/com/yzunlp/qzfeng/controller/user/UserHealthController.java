@@ -60,7 +60,7 @@ public class UserHealthController {
         return userHealthService.hypertensionYear(disease);
     }
 
-    @Operation(summary = "统计用户健康信息(是否长期喝药？)")
+    @Operation(summary = "统计用户健康信息(喝了几年药？)")
     @GetMapping("/admin/{disease}/drug")
     public Result<YesNoVO> hypertensionDrug(@PathVariable("disease") String disease) {
         log.info("统计用户健康信息({}-drug)", disease);

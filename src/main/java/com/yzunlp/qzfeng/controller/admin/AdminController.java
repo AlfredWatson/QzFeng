@@ -28,7 +28,6 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    // todo 查询（分页）全部用户的 UserInfoBaseVO 信息，返回 UserInfoBaseVO
     @GetMapping("/userList")
     @Operation(summary = "查询（分页）全部用户")
     public Result<PageResult> getAllUsers(
@@ -38,8 +37,6 @@ public class AdminController {
         log.info("查询（分页）全部用户");
         return Result.success(adminService.getAllUsers(pageNum, pageSize));
     }
-
-    // todo 根据用户id（前端传入 PathVariable） 查询 一个用户的 UserInfoHealthVO 信息，返回 UserInfoHealthVO
     @GetMapping("/getUserInfoHealthById/{id}")
     @Operation(summary = "查询用户信息与健康信息")
     public Result<UserInfoHealthVO> selectUserInfoHealthById(@PathVariable Long id) {
@@ -47,7 +44,6 @@ public class AdminController {
         return Result.success(adminService.selectUserInfoHealthById(id));
     }
 
-    // todo 根据用户id（前端传入 PathVariable） 查询 一个用户的 所有填写过的问卷信息，返回 userQuestionnaireVO (List数据条目 根据日期降序)
     @GetMapping("/getUserQuestionnaireById/{id}")
     @Operation(summary = "查询用户所有填写过的问卷信息")
     public Result<UserQuestionnaireVO> selectUserQuestionnaireById(@PathVariable Long id) {

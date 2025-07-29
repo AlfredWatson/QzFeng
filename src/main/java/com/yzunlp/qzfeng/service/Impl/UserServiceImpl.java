@@ -39,6 +39,28 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void saveAll(UserHome1stDTO userHome1stDTO) {
+        if (userHome1stDTO.getDiabetesYear()==null){
+            userHome1stDTO.setDiabetesYear(0);
+        }
+        if (userHome1stDTO.getHypertensionYear()==null){
+            userHome1stDTO.setHypertensionYear(0);
+        }
+        if (userHome1stDTO.getPropolisYear()==null){
+            userHome1stDTO.setPropolisYear(0);
+        }
+        if (userHome1stDTO.getHyperlipidemiaYear()==null){
+            userHome1stDTO.setHyperlipidemiaYear(0);
+        }
+        if (userHome1stDTO.getHypertensionDrug()==null){
+            userHome1stDTO.setHypertensionDrug(false);
+        }
+        if (userHome1stDTO.getHyperlipidemiaDrug()==null){
+            userHome1stDTO.setHyperlipidemiaDrug(false);
+        }
+        if (userHome1stDTO.getDiabetesDrug()==null){
+            userHome1stDTO.setDiabetesDrug(false);
+        }
+
         Long currentId = BaseContext.getCurrentId(); //用户ID
         //更新user_info
         UserInfoDTO userInfoDTO = new UserInfoDTO();
