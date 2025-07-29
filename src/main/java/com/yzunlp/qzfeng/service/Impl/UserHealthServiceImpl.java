@@ -1,14 +1,20 @@
 package com.yzunlp.qzfeng.service.Impl;
 
 import com.yzunlp.qzfeng.common.BaseContext;
+import com.yzunlp.qzfeng.common.Result;
+import com.yzunlp.qzfeng.domain.dto.YearCountDTO;
 import com.yzunlp.qzfeng.domain.po.Info2Health;
 import com.yzunlp.qzfeng.domain.po.UserHealth;
+import com.yzunlp.qzfeng.domain.vo.YearPeopleVO;
+import com.yzunlp.qzfeng.domain.vo.YesNoVO;
 import com.yzunlp.qzfeng.mapper.UserHealthMapper;
 import com.yzunlp.qzfeng.service.UserHealthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * @author 10297
@@ -19,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserHealthServiceImpl implements UserHealthService {
 
     private final UserHealthMapper userHealthMapper;
-
     @Autowired
     public UserHealthServiceImpl(UserHealthMapper userHealthMapper) {
         this.userHealthMapper = userHealthMapper;
@@ -90,5 +95,45 @@ public class UserHealthServiceImpl implements UserHealthService {
             userId = BaseContext.getCurrentId();
         }
         return userHealthMapper.selectUserHealthByUserId(userId);
+    }
+
+    @Override
+    public Result<YesNoVO> hypertension(String disease) {
+        return Result.success(userHealthMapper.searchYesOrNo(disease));
+    }
+
+    @Override
+    public Result<YearPeopleVO> hypertensionYear(String disease) {
+//         1. 从 Mapper 获取按年分组的统计数据列表
+        List<YearCountDTO> yearCounts = userHealthMapper.hypertensionYear(disease);
+        // 2. 创建最终的 VO 对象和内部的列表
+        YearPeopleVO resultVO = new YearPeopleVO();
+        List<Integer> yearList = new ArrayList<>();
+        List<Integer> peopleList = new ArrayList<>();
+
+        // 3. 遍历 DTO 列表，将数据拆分到 VO 的两个列表中
+        for (YearCountDTO dto : yearCounts) {
+            yearList.add(dto.getYear());
+            peopleList.add(dto.getPeople());
+        }
+        // 4. 将填充好的列表设置到 VO 对象中
+        resultVO.setYear(yearList);
+        resultVO.setPeople(peopleList);
+
+        // 5. 返回成功的结果
+        return Result.success(resultVO);
+    }
+
+    @Override
+    public Result<YesNoVO> hypertensionDrug(String disease) {
+        // todo
+        return Result.success(userHealthMapper.searchDrugYesOrNo(disease));
+
+
+
+//        YesNoVO yesNoVO = new YesNoVO();
+//        yesNoVO.setYes(23);
+//        yesNoVO.setNo(65);
+//        return Result.success(yesNoVO);
     }
 }

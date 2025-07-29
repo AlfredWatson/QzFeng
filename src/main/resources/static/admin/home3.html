@@ -133,11 +133,12 @@
 
                 <!-- 1.3 服药情况 -->
                 <h3>4.1 用户患有肿瘤情况</h3>
+                <p>{{ tumorRate.yes }}% 有，{{ tumorRate.no }}% 没有</p>
                 <el-button-group>
                     <el-button @click="showChart('yesno', 'pie', 'tumor')">查看饼状图</el-button>
                     <el-button @click="showChart('yesno', 'bar', 'tumor')">查看柱状图</el-button>
                 </el-button-group>
-                <div id="tumor-drug-chart" class="chart-container"></div>
+                <div id="tumor-yesno-chart" class="chart-container"></div>
 
             </div>
             <div v-else>
@@ -224,15 +225,17 @@
                         }
                     });
                 } else if (type === 'year') {
-                    chartId = disease + 'year-chart';
+                    chartId = disease + '-year-chart';
                     axios.get('/user/health/admin/' + disease + '/year').then(res => {
+                        console.log(res.data)
                         if (res.data.code === 1) {
+                            console.log("123")
                             const {year, people} = res.data.data;
                             this.renderChart(chartId, chartType, year.map(y => y + '年'), people);
                         }
                     });
                 } else if (type === 'drug') {
-                    chartId = disease + 'drug-chart';
+                    chartId = disease + '-drug-chart';
                     axios.get('/user/health/admin/' + disease + '/drug').then(res => {
                         if (res.data.code === 1) {
                             const {yes, no} = res.data.data;

@@ -50,38 +50,20 @@ public class UserHealthController {
     @GetMapping("/admin/{disease}/yes-no")
     public Result<YesNoVO> hypertension(@PathVariable("disease") String disease) {
         log.info("统计用户健康信息({})", disease);
-
-        // todo
-
-        YesNoVO yesNoVO = new YesNoVO();
-        yesNoVO.setYes(12);
-        yesNoVO.setNo(5);
-        return Result.success(yesNoVO);
+        return userHealthService.hypertension(disease);
     }
 
     @Operation(summary = "统计用户健康信息(病了几年？)")
     @GetMapping("/admin/{disease}/year")
     public Result<YearPeopleVO> hypertensionYear(@PathVariable("disease") String disease) {
         log.info("统计用户健康信息({}-year)", disease);
-
-        // todo
-
-        YearPeopleVO r = new YearPeopleVO();
-        r.setYear(List.of(2, 4, 5, 7, 12, 14, 15, 16));
-        r.setPeople(List.of(21, 13, 25, 3, 67, 82, 38, 8));
-        return Result.success(r);
+        return userHealthService.hypertensionYear(disease);
     }
 
-    @Operation(summary = "统计用户健康信息(喝了几年药？)")
+    @Operation(summary = "统计用户健康信息(是否长期喝药？)")
     @GetMapping("/admin/{disease}/drug")
     public Result<YesNoVO> hypertensionDrug(@PathVariable("disease") String disease) {
         log.info("统计用户健康信息({}-drug)", disease);
-
-        // todo
-
-        YesNoVO yesNoVO = new YesNoVO();
-        yesNoVO.setYes(23);
-        yesNoVO.setNo(65);
-        return Result.success(yesNoVO);
+        return userHealthService.hypertensionDrug(disease);
     }
 }
