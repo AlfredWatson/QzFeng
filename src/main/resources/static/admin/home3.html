@@ -43,20 +43,12 @@
 <body>
 <div id="app">
     <el-container>
-        <!--        <el-aside width="200px" class="sidebar">-->
-        <!--            <el-menu default-active="1" class="el-menu-vertical-demo" @select="handleMenuSelect">-->
-        <!--                <el-menu-item index="1">主页</el-menu-item>-->
-        <!--                <el-menu-item index="2">查看所有用户信息</el-menu-item>-->
-        <!--                <el-menu-item index="3">用户健康信息统计分析</el-menu-item>-->
-        <!--            </el-menu>-->
-        <!--        </el-aside>-->
-
         <el-aside width="200px">
             <el-menu default-active="1" class="el-menu-vertical-demo" @select="handleMenuSelect">
                 <el-menu-item index="1" @click="currentSection = 'home'">回到主页</el-menu-item>
                 <el-menu-item index="2" @click="currentSection = 'users'">查看所有用户信息</el-menu-item>
                 <el-menu-item index="3" @click="currentSection = 'health'">用户健康信息统计分析</el-menu-item>
-                <el-menu-item index="4" @click="currentSection = 'propolis'">用户填写信息统计分析</el-menu-item>
+                <el-menu-item index="4" @click="currentSection = 'propolis'">用户问卷信息统计分析</el-menu-item>
             </el-menu>
         </el-aside>
 
@@ -65,19 +57,19 @@
                 <h1>欢迎来到后台管理系统</h1>
             </div>
 
-            <div v-if="currentView === 'users'">
+            <div v-else-if="currentView === 'users'">
                 <h1>用户列表</h1>
             </div>
 
-            <div v-if="currentView === 'health'">
+            <div v-else-if="currentView === 'health'">
                 <!-- 1.1 高血压占比 -->
                 <h3>1.1 用户患有高血压情况</h3>
                 <p>{{ hypertensionRate.yes }}% 有，{{ hypertensionRate.no }}% 没有</p>
                 <el-button-group>
-                    <el-button @click="showChart('yesno', 'pie', 'hypertension')">查看饼状图</el-button>
-                    <el-button @click="showChart('yesno', 'bar', 'hypertension')">查看柱状图</el-button>
+                    <el-button @click="showChart('yes-no', 'pie', 'hypertension')">查看饼状图</el-button>
+                    <el-button @click="showChart('yes-no', 'bar', 'hypertension')">查看柱状图</el-button>
                 </el-button-group>
-                <div id="hypertension-yesno-chart" class="chart-container"></div>
+                <div id="hypertension-yes-no-chart" class="chart-container"></div>
 
                 <!-- 1.2 病程 -->
                 <h3>1.2 在患有高血压的人中，病程统计</h3>
@@ -100,10 +92,10 @@
                 <h3>2.1 用户患有糖尿病情况</h3>
                 <p>{{ diabetesRate.yes }}% 有，{{ diabetesRate.no }}% 没有</p>
                 <el-button-group>
-                    <el-button @click="showChart('yesno', 'pie', 'diabetes')">查看饼状图</el-button>
-                    <el-button @click="showChart('yesno', 'bar', 'diabetes')">查看柱状图</el-button>
+                    <el-button @click="showChart('yes-no', 'pie', 'diabetes')">查看饼状图</el-button>
+                    <el-button @click="showChart('yes-no', 'bar', 'diabetes')">查看柱状图</el-button>
                 </el-button-group>
-                <div id="diabetes-yesno-chart" class="chart-container"></div>
+                <div id="diabetes-yes-no-chart" class="chart-container"></div>
 
                 <!-- 1.2 病程 -->
                 <h3>2.2 在患有糖尿病的人中，病程统计</h3>
@@ -126,10 +118,10 @@
                 <h3>3.1 用户患有高血脂情况</h3>
                 <p>{{ hyperlipidemiaRate.yes }}% 有，{{ hyperlipidemiaRate.no }}% 没有</p>
                 <el-button-group>
-                    <el-button @click="showChart('yesno', 'pie', 'hyperlipidemia')">查看饼状图</el-button>
-                    <el-button @click="showChart('yesno', 'bar', 'hyperlipidemia')">查看柱状图</el-button>
+                    <el-button @click="showChart('yes-no', 'pie', 'hyperlipidemia')">查看饼状图</el-button>
+                    <el-button @click="showChart('yes-no', 'bar', 'hyperlipidemia')">查看柱状图</el-button>
                 </el-button-group>
-                <div id="hyperlipidemia-yesno-chart" class="chart-container"></div>
+                <div id="hyperlipidemia-yes-no-chart" class="chart-container"></div>
 
                 <!-- 1.2 病程 -->
                 <h3>3.2 在患有高血脂的人中，病程统计</h3>
@@ -152,12 +144,45 @@
                 <h3>4.1 用户患有肿瘤情况</h3>
                 <p>{{ tumorRate.yes }}% 有，{{ tumorRate.no }}% 没有</p>
                 <el-button-group>
-                    <el-button @click="showChart('yesno', 'pie', 'tumor')">查看饼状图</el-button>
-                    <el-button @click="showChart('yesno', 'bar', 'tumor')">查看柱状图</el-button>
+                    <el-button @click="showChart('yes-no', 'pie', 'tumor')">查看饼状图</el-button>
+                    <el-button @click="showChart('yes-no', 'bar', 'tumor')">查看柱状图</el-button>
                 </el-button-group>
-                <div id="tumor-yesno-chart" class="chart-container"></div>
-
+                <div id="tumor-yes-no-chart" class="chart-container"></div>
             </div>
+
+            <div v-else-if="currentView === 'propolis'">
+                <h3>1.1 用户蜂胶使用情况</h3>
+                <el-table :data="propolisYesNoTable" style="width: 100%; margin-bottom: 20px">
+                    <el-table-column prop="label" label="选项"></el-table-column>
+                    <el-table-column prop="count" label="小计"></el-table-column>
+                    <el-table-column prop="percent" label="比例"></el-table-column>
+                </el-table>
+                <el-button-group>
+                    <el-button @click="showChart('yes-no', 'pie', 'propolis')">查看饼状图</el-button>
+                    <el-button @click="showChart('yes-no', 'bar', 'propolis')">查看柱状图</el-button>
+                </el-button-group>
+                <div id="propolis-yes-no-chart" class="chart-container"></div>
+
+                <h3>1.2 用户服用蜂胶的年份统计</h3>
+                <el-button-group>
+                    <el-button @click="showChart('year', 'pie', 'propolis')">查看饼状图</el-button>
+                    <el-button @click="showChart('year', 'bar', 'propolis')">查看柱状图</el-button>
+                </el-button-group>
+                <div id="propolis-year-chart" class="chart-container"></div>
+
+                <h3>1.3 用户服用蜂胶的频率统计</h3>
+                <el-table :data="propolisFrequencyTable" style="width: 100%; margin-bottom: 20px">
+                    <el-table-column prop="label" label="选项"></el-table-column>
+                    <el-table-column prop="count" label="小计"></el-table-column>
+                    <el-table-column prop="percent" label="比例"></el-table-column>
+                </el-table>
+                <el-button-group>
+                    <el-button @click="showChart('frequency', 'pie', 'propolis')">查看饼状图</el-button>
+                    <el-button @click="showChart('frequency', 'bar', 'propolis')">查看柱状图</el-button>
+                </el-button-group>
+                <div id="propolis-frequency-chart" class="chart-container"></div>
+            </div>
+
             <div v-else>
                 <p>请选择左侧菜单</p>
             </div>
@@ -173,12 +198,18 @@
         data() {
             return {
                 currentView: '',
+
                 hypertensionRate: {yes: 0, no: 0},
                 diabetesRate: {yes: 0, no: 0},
                 hyperlipidemiaRate: {yes: 0, no: 0},
                 tumorRate: {yes: 0, no: 0},
+
                 yearData: {year: [], people: []},
-                drugData: {yes: 0, no: 0}
+                drugData: {yes: 0, no: 0},
+
+                propolisRate: {yes: 0, no: 0},
+                propolisYesNoTable: [],
+                propolisFrequencyTable: [],
             }
         },
         methods: {
@@ -243,55 +274,106 @@
                     }
                 });
             },
-            fetchPropolisRate(){
+            fetchPropolisRate() {
                 axios.get('/user/propolis/admin/yes-no').then(res => {
-                    // console.log(res)
                     if (res.data.code === 1) {
-                        const total = res.data.data.yes + res.data.data.no;
-                        this.hypertensionRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
-                        this.hypertensionRate.no = ((res.data.data.no / total) * 100).toFixed(1);
-                    } else {
-                        console.log('获取高血压数据失败');
+                        const {yes, no} = res.data.data;
+                        const total = yes + no;
+                        this.propolisRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
+                        this.propolisRate.no = ((res.data.data.no / total) * 100).toFixed(1);
+                        this.propolisYesNoTable = [
+                            {label: '使用过', count: yes, percent: ((yes / total) * 100).toFixed(1) + '%'},
+                            {label: '没有使用过', count: no, percent: ((no / total) * 100).toFixed(1) + '%'},
+                            {label: '有效填写人数', count: total, percent: '-'}
+                        ];
                     }
                 });
                 axios.get('/user/propolis/admin/frequency').then(res => {
-                    // console.log(res)
                     if (res.data.code === 1) {
-                        const total = res.data.data.yes + res.data.data.no;
-                        this.hypertensionRate.yes = ((res.data.data.yes / total) * 100).toFixed(1);
-                        this.hypertensionRate.no = ((res.data.data.no / total) * 100).toFixed(1);
-                    } else {
-                        console.log('获取高血压数据失败');
+                        const raw = res.data.data;
+                        const labels = Object.keys(raw);
+                        const values = Object.values(raw);
+                        // 构建 frequency 表格
+                        const total = values.reduce((a, b) => a + b, 0);
+                        this.propolisFrequencyTable = labels.map((label, index) => ({
+                            label,
+                            count: values[index],
+                            percent: ((values[index] / total) * 100).toFixed(1) + '%'
+                        }));
+                        this.propolisFrequencyTable.push({label: '有效填写人数', count: total, percent: '---'});
                     }
                 });
             },
             showChart(type, chartType, disease) {
-                let endpoint = ''
-                let chartId = ''
-                if (type === 'yesno') {
-                    chartId = disease + '-yesno-chart';
-                    axios.get('/user/health/admin/' + disease + '/yes-no').then(res => {
-                        if (res.data.code === 1) {
-                            const {yes, no} = res.data.data;
-                            this.renderChart(chartId, chartType, ['有', '无'], [yes, no]);
-                        }
-                    });
-                    // const {yes, no} = this.tumorRate;
-                    // this.renderChart(chartId, chartType, ['有', '无'], [yes, no]);
+                let chartId = disease + '-' + type + '-chart';
+                let requestUrl = '';
+
+                if (disease === 'propolis') {
+                    requestUrl = '/user/propolis/admin/' + type;
+                } else {
+                    requestUrl = '/user/health/admin/' + disease + '/' + type;
+                }
+
+                if (type === 'yes-no') {
+                    if (disease === 'hypertension') {
+                        const {yes, no} = this.hypertensionRate;
+                        this.renderChart(chartId, chartType, ['有', '无'], [yes, no]);
+
+                    } else if (disease === 'diabetes') {
+                        const {yes, no} = this.diabetesRate;
+                        this.renderChart(chartId, chartType, ['有', '无'], [yes, no]);
+
+                    } else if (disease === 'hyperlipidemia') {
+                        const {yes, no} = this.hyperlipidemiaRate;
+                        this.renderChart(chartId, chartType, ['有', '无'], [yes, no]);
+
+                    } else if (disease === 'tumor') {
+                        const {yes, no} = this.tumorRate;
+                        this.renderChart(chartId, chartType, ['有', '无'], [yes, no]);
+
+                    } else if (disease === 'propolis') {
+                        const {yes, no} = this.propolisRate;
+                        this.renderChart(chartId, chartType, ['有', '无'], [yes, no]);
+
+                    } else {
+                        axios.get(requestUrl).then(res => {
+                            if (res.data.code === 1) {
+                                const {yes, no} = res.data.data;
+                                this.renderChart(chartId, chartType, ['有', '无'], [yes, no]);
+                            }
+                        });
+                    }
                 } else if (type === 'year') {
-                    chartId = disease + '-year-chart';
-                    axios.get('/user/health/admin/' + disease + '/year').then(res => {
+                    axios.get(requestUrl).then(res => {
                         if (res.data.code === 1) {
                             const {year, people} = res.data.data;
                             this.renderChart(chartId, chartType, year.map(y => y + '年'), people);
                         }
                     });
+
                 } else if (type === 'drug') {
-                    chartId = disease + '-drug-chart';
-                    axios.get('/user/health/admin/' + disease + '/drug').then(res => {
+                    axios.get(requestUrl).then(res => {
                         if (res.data.code === 1) {
                             const {yes, no} = res.data.data;
                             this.renderChart(chartId, chartType, ['是', '否'], [yes, no]);
+                        }
+                    });
+
+                } else if (type === 'frequency') {
+                    axios.get(requestUrl).then(res => {
+                        if (res.data.code === 1) {
+                            const raw = res.data.data;
+                            const labels = Object.keys(raw);
+                            const values = Object.values(raw);
+                            // 构建 frequency 表格
+                            const total = values.reduce((a, b) => a + b, 0);
+                            this.propolisFrequencyTable = labels.map((label, index) => ({
+                                label,
+                                count: values[index],
+                                percent: ((values[index] / total) * 100).toFixed(1) + '%'
+                            }));
+                            this.propolisFrequencyTable.push({label: '有效填写人数', count: total, percent: '-'});
+                            this.renderChart(chartId, chartType, labels, values);
                         }
                     });
                 }
