@@ -88,26 +88,6 @@ public class UserCheckupFormController {
             return Result.error("上传失败，保存文件出错");
         }
 
-//        String originalFilename = file.getOriginalFilename();
-//        try {
-//            if (originalFilename != null) {
-//                // 利用UUID构造新的文件名称
-//                String objectName = UUID.randomUUID() + originalFilename;
-//                // 文件的请求路径
-//                String filePath = UPLOAD_DIR + objectName;
-//                String returnImagePate = "http://49.232.199.229:18080/images/" + objectName;
-//                file.transferTo(new File(filePath));
-//
-//                UserCheckupForm userCheckupForm = new UserCheckupForm();
-//                userCheckupForm.setUserId(BaseContext.getCurrentId());
-//                userCheckupForm.setPicUrl(returnImagePate);
-////                checkupFormService.add(userCheckupForm);
-//                return Result.success(userCheckupForm);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return Result.error("上传失败");
     }
 
     /**
