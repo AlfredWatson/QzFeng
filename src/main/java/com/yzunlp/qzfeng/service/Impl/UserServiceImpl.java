@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StreamUtils;
 
 import java.time.LocalDateTime;
 
@@ -36,25 +37,25 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void saveAll(UserHome1stDTO userHome1stDTO) {
-        if (userHome1stDTO.getDiabetesYear()==null){
+        if (userHome1stDTO.getDiabetesYear() == null) {
             userHome1stDTO.setDiabetesYear(0);
         }
-        if (userHome1stDTO.getHypertensionYear()==null){
+        if (userHome1stDTO.getHypertensionYear() == null) {
             userHome1stDTO.setHypertensionYear(0);
         }
-        if (userHome1stDTO.getPropolisYear()==null){
+        if (userHome1stDTO.getPropolisYear() == null) {
             userHome1stDTO.setPropolisYear(0);
         }
-        if (userHome1stDTO.getHyperlipidemiaYear()==null){
+        if (userHome1stDTO.getHyperlipidemiaYear() == null) {
             userHome1stDTO.setHyperlipidemiaYear(0);
         }
-        if (userHome1stDTO.getHypertensionDrug()==null){
+        if (userHome1stDTO.getHypertensionDrug() == null) {
             userHome1stDTO.setHypertensionDrug(false);
         }
-        if (userHome1stDTO.getHyperlipidemiaDrug()==null){
+        if (userHome1stDTO.getHyperlipidemiaDrug() == null) {
             userHome1stDTO.setHyperlipidemiaDrug(false);
         }
-        if (userHome1stDTO.getDiabetesDrug()==null){
+        if (userHome1stDTO.getDiabetesDrug() == null) {
             userHome1stDTO.setDiabetesDrug(false);
         }
 
@@ -68,11 +69,11 @@ public class UserServiceImpl implements UserService {
             userInfoDTO.setPassword(pwd);
         }
         userInfoDTO.setId(currentId);
-        BeanUtils.copyProperties(userHome1stDTO,userInfoDTO);
+        BeanUtils.copyProperties(userHome1stDTO, userInfoDTO);
         userInfoMapper.updateUserInfo(userInfoDTO);
         //更新user_health
         UserHealth userHealth = new UserHealth();
-        BeanUtils.copyProperties(userHome1stDTO,userHealth);
+        BeanUtils.copyProperties(userHome1stDTO, userHealth);
         userHealthService.saveUserHealth(userHealth);
 
         //更新user_eval
@@ -82,20 +83,23 @@ public class UserServiceImpl implements UserService {
 
         //更新user_propolis
         UserPropolis userPropolis = new UserPropolis();
-        BeanUtils.copyProperties(userHome1stDTO,userPropolis);
+        BeanUtils.copyProperties(userHome1stDTO, userPropolis);
         userPropolisService.add(userPropolis);
 
         //更新user_checkup_form
-        UserCheckupForm userCheckupForm = new UserCheckupForm();
-        userCheckupForm.setUserId(currentId);
-        userCheckupForm.setPicUrl(userHome1stDTO.getPicUrl());
-        userCheckupForm.setUpdateTime(LocalDateTime.now());
-        userCheckupFormService.add(userCheckupForm);
+        if (userHome1stDTO.getPicUrl() != "" && userHome1stDTO.getPicUrl() != null) {
+            //更新user_checkup_form
+            UserCheckupForm userCheckupForm = new UserCheckupForm();
+            userCheckupForm.setUserId(currentId);
+            userCheckupForm.setPicUrl(userHome1stDTO.getPicUrl());
+            userCheckupForm.setUpdateTime(LocalDateTime.now());
+            userCheckupFormService.add(userCheckupForm);
+        }
     }
+    public void saveQuestionnaires(UserHomeDTO userHo
 
     @Override
-    @Transactional
-    public void saveQuestionnaires(UserHomeDTO userHomeDTO) {
+    @TransactionalmeDTO) {
         Long currentId = BaseContext.getCurrentId(); //用户ID
         //更新user_eval
         UserEval userEval = new UserEval();
@@ -104,14 +108,17 @@ public class UserServiceImpl implements UserService {
 
         //更新user_propolis
         UserPropolis userPropolis = new UserPropolis();
-        BeanUtils.copyProperties(userHomeDTO,userPropolis);
+        BeanUtils.copyProperties(userHomeDTO, userPropolis);
         userPropolisService.add(userPropolis);
 
-        //更新user_checkup_form
-        UserCheckupForm userCheckupForm = new UserCheckupForm();
-        userCheckupForm.setUserId(currentId);
-        userCheckupForm.setPicUrl(userHomeDTO.getPicUrl());
-        userCheckupForm.setUpdateTime(LocalDateTime.now());
-        userCheckupFormService.add(userCheckupForm);
+        if (userHomeDTO.getPicUrl() != "" && userHomeDTO.getPicUrl() != null) {
+            //更新user_checkup_form
+            UserCheckupForm userCheckupForm = new UserCheckupForm();
+            userCheckupForm.setUserId(currentId);
+            userCheckupForm.setPicUrl(userHomeDTO.getPicUrl());
+            userCheckupForm.setUpdateTime(LocalDateTime.now());
+            userCheckupFormService.add(userCheckupForm);
+        }
+
     }
 }
