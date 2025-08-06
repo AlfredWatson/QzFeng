@@ -96,10 +96,10 @@ public class UserServiceImpl implements UserService {
             userCheckupFormService.add(userCheckupForm);
         }
     }
-    public void saveQuestionnaires(UserHomeDTO userHo
 
     @Override
-    @TransactionalmeDTO) {
+    @Transactional
+    public void saveQuestionnaires(UserHomeDTO userHomeDTO) {
         Long currentId = BaseContext.getCurrentId(); //用户ID
         //更新user_eval
         UserEval userEval = new UserEval();
